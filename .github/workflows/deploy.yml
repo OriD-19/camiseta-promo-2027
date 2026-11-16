@@ -1,0 +1,80 @@
+name: Deploy a GitHub Pages
+
+# Variables del repo (Settings → Secrets and variables → Actions → Variables):
+#   VITE_APPS_SCRIPT_URL  URL /exec del backend. Si falta, el sitio usa el mock con datos de ejemplo.
+#   CUSTOM_DOMAIN         opcional, p. ej. camiseta.midominio.com. Si existe, se genera dist/CNAME y la base es "/".
+#   VITE_BASE             opcional. Si no hay dominio propio y falta, se usa "/<nombre-del-repo>/".
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests
+        run: npm test
+
+      - name: Calcular ruta base
+        id: base
+        env:
+          CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN }}
+          VITE_BASE: ${{ vars.VITE_BASE }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          if [ -n "$CUSTOM_DOMAIN" ]; then base="/";
+          elif [ -n "$VITE_BASE" ]; then base="$VITE_BASE";
+          else base="/$REPO/"; fi
+          echo "value=$base" >> "$GITHUB_OUTPUT"
+          echo "Ruta base: $base"
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_APPS_SCRIPT_URL: ${{ vars.VITE_APPS_SCRIPT_URL }}
+          VITE_BASE: ${{ steps.base.outputs.value }}
+
+      - name: CNAME (solo con dominio propio)
+        if: ${{ vars.CUSTOM_DOMAIN != '' }}
+        env:
+          CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN }}
+        run: printf '%s\n' "$CUSTOM_DOMAIN" > dist/CNAME
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

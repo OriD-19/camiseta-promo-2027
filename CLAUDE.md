@@ -55,5 +55,5 @@ reference/prototipo/       prototipo de diseño (.dc.html); solo es referencia, 
 - `.env` (no se commitea):
   - `VITE_APPS_SCRIPT_URL=https://script.google.com/macros/s/.../exec`
   - `VITE_BASE=/` (con dominio propio) o `/<nombre-del-repo>/` (GitHub Pages sin dominio).
-- En GitHub Actions, las dos se leen de *Repository variables* (`vars.VITE_APPS_SCRIPT_URL`, `vars.VITE_BASE`).
+- En GitHub Actions, las dos se leen de *Repository variables* (`vars.VITE_APPS_SCRIPT_URL`, `vars.VITE_BASE`). Con dominio propio se define además `vars.CUSTOM_DOMAIN`: el workflow genera `dist/CNAME` y fuerza `base = /`. Sin `VITE_BASE` ni dominio, la base es `/<repo>/`.
 - Para desarrollar sin backend, `api.ts` puede usar un mock si `VITE_APPS_SCRIPT_URL` está vacío. El mock genera datos de ejemplo deterministas, como en el prototipo.

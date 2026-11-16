@@ -16,7 +16,7 @@ La referencia visual y de comportamiento es el prototipo de `reference/prototipo
 - **Backend:** Google Apps Script + Google Sheets (`apps-script/`, guía en `docs/APPS_SCRIPT.md`). El frontend nunca habla directo con Sheets.
 - **Hosting:** GitHub Pages, desplegado con GitHub Actions (`.github/workflows/deploy.yml`) en cada push a `main`.
   - `base` en `vite.config.ts` se lee de `VITE_BASE`: `/` con dominio propio, `/<repo>/` sin él.
-  - Si hay dominio propio, `public/CNAME` contiene el subdominio.
+  - Si hay dominio propio, se define la variable del repo `CUSTOM_DOMAIN` y el workflow genera `dist/CNAME` y usa `base = /`. Sin ella, la base es `VITE_BASE` o, por defecto, `/<repo>/`. No se commitea un `public/CNAME`.
 - **Variables de entorno:**
   - `VITE_APPS_SCRIPT_URL`: URL `/exec` del backend.
   - `VITE_BASE`: ruta base del sitio.
