@@ -1,0 +1,46 @@
+/* Tokens de diseño (SPEC §8). */
+:root {
+  --c-page: #F4F3F0;
+  --c-surface: #FFFFFF;
+  --c-panel: #E9E7E2;
+  --c-text: #16181D;
+  --c-text-2: #3F444F;
+  --c-label: #5A5F6B;
+  --c-border: #E0DED8;
+  --c-border-strong: #D4D2CC;
+  --c-input-border: #8E8A82; /* ≥ 3:1 sobre blanco para el borde de campos */
+  --c-selected: #16181D;
+  --c-on-selected: #FFFFFF;
+  --c-focus: #2B4ACB;
+  --c-link-hover: #1C318C;
+  --c-track: #ECEAE5;
+  --c-bar-muted: #A9A59C;
+  --c-swatch-border: #C9C6BF;
+
+  --c-error: #A3261B;
+  --c-error-bg: #FBEAE7;
+  --c-success: #14532D;
+  --c-success-bg: #E8F3EC;
+  --c-warn: #7A3E00;
+  --c-warn-bg: #FDE7C8;
+
+  --r-control: 12px;
+  --r-control-sm: 10px;
+  --r-card: 16px;
+  --r-panel: 20px;
+  --r-pill: 999px;
+
+  --tap: 44px;
+
+  --font-ui: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', Inter, system-ui, sans-serif;
+
+  --gutter: 16px;
+  --shadow-float: 0 6px 24px rgba(22, 24, 29, 0.18), 0 1px 3px rgba(22, 24, 29, 0.12);
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (min-width: 600px) {
+  :root { --gutter: 24px; }
+}

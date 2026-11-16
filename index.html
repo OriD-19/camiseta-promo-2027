@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F4F3F0" />
+    <meta name="description" content="Votá el frente común de la camiseta de la Promoción 2027 de la ESEN." />
+    <title>Camiseta Promo 2027 — Votación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Graduate&family=Inter:wght@400;500;600;700&family=Montserrat:wght@800&family=Playfair+Display:wght@800&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap"
+    />
+    <script type="module" src="/src/vote.ts"></script>
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <p class="eyebrow">ESEN · Promoción 2027</p>
+        <h1 class="h1">Elegí el frente de nuestra camiseta</h1>
+        <p class="lead">
+          Votamos un solo frente para toda la promoción: fondo, logo y tipografía. La espalda la diseña cada carrera
+          con sus propias referencias, siguiendo la misma línea gráfica.
+        </p>
+      </header>
+
+      <div class="studio">
+        <section class="preview" id="preview" aria-labelledby="preview-title" tabindex="-1">
+          <h2 id="preview-title" class="visually-hidden">Vista previa</h2>
+          <div class="preview__toggles">
+            <div class="seg" role="group" aria-label="Lado" id="sides"></div>
+            <div class="seg" role="group" aria-label="Vista" id="views"></div>
+          </div>
+
+          <div class="preview__single" id="single">
+            <div class="preview__shirt" id="single-shirt"></div>
+            <p class="preview__caption">Viendo como <strong id="viewing"></strong></p>
+          </div>
+
+          <div id="grid-wrap" hidden>
+            <div class="preview__grid" id="grid"></div>
+            <p class="preview__note">
+              Así se ve la uniformidad: mismo logo y tipografía en las 4 carreras. Con «Color de la carrera», solo
+              cambia el fondo.
+            </p>
+          </div>
+        </section>
+
+        <div class="controls" id="controles">
+          <fieldset class="group">
+            <legend class="group__legend">Ver como</legend>
+            <div class="opts opts--4" id="opt-careers"></div>
+          </fieldset>
+          <fieldset class="group">
+            <legend class="group__legend">1 · Color de fondo</legend>
+            <div class="opts opts--2" id="opt-fondos"></div>
+          </fieldset>
+          <fieldset class="group">
+            <legend class="group__legend">2 · Logo frontal</legend>
+            <div class="opts opts--2" id="opt-logos"></div>
+          </fieldset>
+          <fieldset class="group">
+            <legend class="group__legend">3 · Tipografía</legend>
+            <div class="opts opts--list" id="opt-fonts"></div>
+          </fieldset>
+        </div>
+      </div>
+
+      <section class="vote" id="voto" aria-labelledby="vote-title">
+        <div class="vote__head">
+          <h2 id="vote-title" class="h2">Enviá tu voto</h2>
+          <p class="vote__summary">Tu combinación: <strong id="resumen"></strong></p>
+        </div>
+
+        <p class="notice notice--warn" id="version-warn" role="status" hidden>
+          Hay una versión nueva de las opciones. Recargá la página antes de votar.
+        </p>
+
+        <form class="form" id="form" novalidate>
+          <div class="form__grid">
+            <div class="field">
+              <label class="field__label" for="f-nombre">Nombre completo</label>
+              <input class="input" id="f-nombre" name="nombre" type="text" autocomplete="name" maxlength="80"
+                required enterkeyhint="next" aria-describedby="e-nombre" />
+              <p class="field__error" id="e-nombre" hidden></p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-correo">Correo institucional</label>
+              <input class="input" id="f-correo" name="correo" type="email" inputmode="email" autocomplete="email"
+                autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="usuario@esen.edu.sv"
+                required enterkeyhint="next" aria-describedby="e-correo" />
+              <p class="field__error" id="e-correo" hidden></p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-carrera">Tu carrera</label>
+              <select class="input" id="f-carrera" name="carrera" required aria-describedby="e-carrera">
+                <option value="">Seleccioná…</option>
+              </select>
+              <p class="field__error" id="e-carrera" hidden></p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="f-coment">Comentario o propuesta de frase (opcional)</label>
+            <textarea class="input" id="f-coment" name="comentario" rows="3" maxlength="500"
+              aria-describedby="h-coment e-coment"></textarea>
+            <p class="field__hint" id="h-coment"><span id="coment-count">0</span>/500 caracteres</p>
+            <p class="field__error" id="e-coment" hidden></p>
+          </div>
+
+          <div class="hp" aria-hidden="true">
+            <label for="f-website">No llenés este campo</label>
+            <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <p class="notice notice--error" id="form-error" role="alert" hidden></p>
+
+          <div class="form__actions">
+            <button class="btn" id="submit" type="submit">Enviar mi voto</button>
+            <p class="form__note">Si votás más de una vez, cuenta solo tu último voto.</p>
+          </div>
+        </form>
+
+        <div class="notice notice--success success" id="success" role="status" hidden>
+          <p class="success__title" id="success-title" tabindex="-1"></p>
+          <button class="btn btn--ghost" id="change" type="button">Cambiar mi voto</button>
+        </div>
+
+        <div class="notice notice--info" id="closed" role="status" hidden>
+          <p><strong>La votación está cerrada.</strong> Podés seguir viendo las combinaciones en el visualizador.</p>
+        </div>
+      </section>
+    </main>
+
+    <button class="mini" id="mini" type="button" aria-label="Volver a la vista previa">
+      <span class="mini__shirt" id="mini-shirt"></span>
+      <span class="mini__label" aria-hidden="true">Vista previa</span>
+    </button>
+  </body>
+</html>
