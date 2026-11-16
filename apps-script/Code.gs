@@ -106,6 +106,10 @@ function handleVote_(d) {
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(15000)) return { ok: false, error: 'servidor_ocupado' };
   try {
+    // Se vuelve a revisar dentro del lock: dos envíos simultáneos del mismo correo
+    // pueden pasar el chequeo de arriba a la vez; solo el primero debe escribir.
+    if (cache.get(ck)) return { ok: false, error: 'espera_unos_segundos' };
+
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const votos = ss.getSheetByName(SHEETS.VOTOS);
     const log = ss.getSheetByName(SHEETS.LOG);
