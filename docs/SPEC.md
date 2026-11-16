@@ -141,7 +141,7 @@ Referencia: `reference/prototipo/Resultados.dc.html`.
 - **Comentarios / frases propuestas:** lista simple con la carrera de cada comentario y un buscador.
 - **Exportar:** botón "Descargar CSV (anónimo)" con las columnas `carrera,fondo,logo,tipografia,version`. El archivo completo, con nombres, se baja desde Google Sheets.
 - **Actualizar:** botón "Actualizar" que vuelve a pedir los datos y muestra la hora de la última carga.
-- **Versiones viejas:** si hay votos con `version` distinta de `OPTIONS_VERSION`, mostrar un aviso con cuántos son.
+- **Versiones viejas:** los votos con `version` distinta de `OPTIONS_VERSION` se excluyen de todo (conteos, top 3, desglose y CSV). Si hay alguno, se muestra un aviso con cuántos son.
 
 ## 7. Contrato con el backend
 

@@ -193,3 +193,6 @@ select.input {
     scroll-behavior: auto !important;
   }
 }
+
+/* Punto de color de carrera (decorativo; siempre va junto a la sigla). */
+.dot { flex: none; width: 10px; height: 10px; border-radius: 50%; }

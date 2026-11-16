@@ -2,10 +2,124 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F4F3F0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content="Panel de resultados de la votación de la camiseta Promo 2027 (solo representantes)." />
     <title>Camiseta Promo 2027 — Resultados</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Graduate&family=Inter:wght@400;500;600;700&family=Montserrat:wght@800&family=Playfair+Display:wght@800&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap"
+    />
+    <script type="module" src="/src/results.ts"></script>
   </head>
   <body>
-    <main><p>Próximamente.</p></main>
+    <main class="page" id="app">
+      <!-- Acceso -->
+      <section class="login" id="login" aria-labelledby="login-title">
+        <div class="login__card">
+          <div class="login__head">
+            <p class="eyebrow">Panel de representantes</p>
+            <h1 class="h1" id="login-title">Resultados de la votación</h1>
+            <p class="muted">Ingresá la clave de representantes para ver los resultados.</p>
+          </div>
+          <form class="form" id="login-form" novalidate>
+            <div class="field">
+              <label class="field__label" for="f-key">Clave de representantes</label>
+              <input class="input" id="f-key" name="key" type="password" autocomplete="current-password"
+                autocapitalize="none" autocorrect="off" spellcheck="false" required enterkeyhint="go" />
+              <p class="field__hint" id="mock-hint" hidden>
+                Modo de prueba sin backend: cualquier clave muestra datos de ejemplo.
+              </p>
+            </div>
+            <p class="notice notice--error" id="login-error" role="alert" hidden></p>
+            <button class="btn" id="login-btn" type="submit">Ver resultados</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Dashboard -->
+      <div class="dash" id="dash" hidden>
+        <header class="dash__header">
+          <div class="dash__title">
+            <div class="dash__eyebrow">
+              <p class="eyebrow">Panel de representantes</p>
+              <span class="badge" id="mock-badge" hidden>Datos de ejemplo</span>
+              <span class="chip" id="open-chip"></span>
+            </div>
+            <h1 class="h1">Resultados de la votación</h1>
+          </div>
+          <div class="seg seg--filter" role="group" aria-label="Filtrar por carrera" id="filters"></div>
+        </header>
+
+        <div class="toolbar">
+          <p class="toolbar__updated small muted" id="updated" aria-live="polite"></p>
+          <div class="toolbar__actions">
+            <button class="btn btn--ghost" id="refresh" type="button">Actualizar</button>
+            <button class="btn btn--ghost" id="csv" type="button">Descargar CSV (anónimo)</button>
+            <button class="btn btn--ghost" id="logout" type="button">Salir</button>
+          </div>
+        </div>
+
+        <p class="notice notice--error" id="dash-error" role="alert" hidden></p>
+        <p class="notice notice--warn" id="old-warn" role="status" hidden></p>
+
+        <section class="cards" aria-label="Resumen" id="summary"></section>
+
+        <section class="panel" aria-labelledby="top-title">
+          <div class="panel__head panel__head--row">
+            <div class="panel__titles">
+              <h2 class="h2" id="top-title">Top 3 combinaciones</h2>
+              <p class="muted small-2">Fondo + logo + tipografía, votados como una sola opción.</p>
+            </div>
+            <div class="lens" role="group" aria-labelledby="lens-label">
+              <span class="lens__label" id="lens-label">Ver como</span>
+              <div class="lens__btns" id="lenses"></div>
+            </div>
+          </div>
+          <div class="top3" id="top3" role="region" aria-label="Combinaciones más votadas" tabindex="0"></div>
+        </section>
+
+        <section class="vars" aria-label="Resultados por variable" id="vars"></section>
+
+        <section class="panel" aria-labelledby="careers-title">
+          <div class="panel__head">
+            <h2 class="h2" id="careers-title">Desglose por carrera</h2>
+            <p class="muted small-2">Para confirmar que el frente ganador también tiene respaldo dentro de cada carrera.</p>
+          </div>
+          <div class="table-wrap" role="region" aria-labelledby="careers-title" tabindex="0">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Carrera</th>
+                  <th scope="col">Participación</th>
+                  <th scope="col">Fondo</th>
+                  <th scope="col">Logo</th>
+                  <th scope="col">Tipografía</th>
+                  <th scope="col">Combinación #1</th>
+                </tr>
+              </thead>
+              <tbody id="careers-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="comments-title">
+          <div class="panel__head panel__head--row">
+            <div class="panel__titles">
+              <h2 class="h2" id="comments-title">Comentarios y frases propuestas</h2>
+              <p class="muted small-2" id="comments-count"></p>
+            </div>
+            <div class="field comments__search">
+              <label class="field__label" for="f-search">Buscar en comentarios</label>
+              <input class="input" id="f-search" type="search" autocomplete="off" enterkeyhint="search" />
+            </div>
+          </div>
+          <ul class="comments" id="comments"></ul>
+        </section>
+      </div>
+    </main>
   </body>
 </html>

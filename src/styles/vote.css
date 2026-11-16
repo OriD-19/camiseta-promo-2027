@@ -140,7 +140,6 @@
   border-radius: var(--r-control-sm);
 }
 .opt--career[aria-pressed='true'] { background: var(--c-selected); color: var(--c-on-selected); }
-.dot { flex: none; width: 10px; height: 10px; border-radius: 50%; }
 
 /* Fondos */
 .opt--fondo {
