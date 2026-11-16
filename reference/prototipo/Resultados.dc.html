@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Camiseta Promo 2027 — Resultados</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Graduate&amp;family=Inter:wght@400;500;600;700&amp;family=Montserrat:wght@800&amp;family=Playfair+Display:wght@800&amp;family=Space+Grotesk:wght@500;700&amp;family=Space+Mono:wght@400;700&amp;display=swap">
+<style>
+body{margin:0;background:#F4F3F0}
+a{color:#2B4ACB}a:hover{color:#1C318C}
+button{font-family:inherit}
+button:focus-visible{outline:3px solid #2B4ACB;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: Inter, sans-serif; color: #16181D; background: #F4F3F0; min-height: 100vh">
+<div style="max-width: 1240px; margin: 0 auto; padding: 32px 24px 64px; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 10px">
+<p style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #5A5F6B">Panel de representantes</p>
+<span style="font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FDE7C8; color: #7A3E00">Datos de ejemplo</span>
+</div>
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 40px; line-height: 1.1; font-weight: 700">Resultados de la votación</h1>
+</div>
+<div role="group" aria-label="Filtrar por carrera" style="display: flex; flex-wrap: wrap; background: #FFFFFF; border-radius: 999px; padding: 4px; gap: 4px; border: 1px solid #E0DED8">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+<button type="button" onClick="{{ f.pick }}" aria-pressed="{{ f.pressed }}" style="min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer; background: {{f.bg}}; color: {{f.fg}}">{{ f.label }}</button>
+</sc-for>
+</div>
+</header>
+
+<section aria-label="Resumen" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<div style="background: #FFFFFF; border: 1px solid #E0DED8; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+<p style="margin: 0; font-size: 13px; font-weight: 600; color: #5A5F6B">Votos recibidos</p>
+<p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 40px; font-weight: 700; line-height: 1">{{ total }}</p>
+<p style="margin: 0; font-size: 13px; color: #3F444F">de {{ base }} personas · {{ partPct }} de participación</p>
+<div style="height: 8px; border-radius: 999px; background: #ECEAE5; overflow: hidden"><div style="height: 100%; width: {{partW}}%; background: #16181D; border-radius: 999px"></div></div>
+</div>
+<sc-for list="{{ winners }}" as="w" hint-placeholder-count="3">
+<div style="background: #FFFFFF; border: 1px solid #E0DED8; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+<p style="margin: 0; font-size: 13px; font-weight: 600; color: #5A5F6B">{{ w.title }} más votado</p>
+<p style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; line-height: 1.15">{{ w.label }}</p>
+<p style="margin: 0; font-size: 13px; color: #3F444F">{{ w.count }} votos · {{ w.pct }} · {{ w.gap }}</p>
+</div>
+</sc-for>
+</section>
+
+<section aria-label="Top 3 combinaciones" style="background: #FFFFFF; border: 1px solid #E0DED8; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700">Top 3 combinaciones</h2>
+<p style="margin: 0; font-size: 14px; color: #3F444F">Fondo + logo + tipografía, votados como una sola opción.</p>
+</div>
+<div role="group" aria-label="Ver camisetas como" style="display: flex; align-items: center; gap: 6px">
+<span style="font-size: 13px; font-weight: 600; color: #5A5F6B; margin-right: 4px">Ver como</span>
+<sc-for list="{{ lenses }}" as="l" hint-placeholder-count="4">
+<button type="button" onClick="{{ l.pick }}" aria-pressed="{{ l.pressed }}" style="min-height: 36px; min-width: 52px; padding: 0 10px; border-radius: 8px; border: 2px solid {{l.border}}; background: {{l.bg}}; color: {{l.fg}}; font-size: 13px; font-weight: 700; cursor: pointer">{{ l.id }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px">
+<sc-for list="{{ top3 }}" as="c" hint-placeholder-count="3">
+<div style="background: #F4F3F0; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; border: 2px solid {{c.ring}}">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700">#{{ c.rank }}</span>
+<span style="font-size: 14px; font-weight: 700">{{ c.count }} votos · {{ c.pct }}</span>
+</div>
+<dc-import name="Shirt" fill="{{ c.shirt.fill }}" ink="{{ c.shirt.ink }}" accent="{{ c.shirt.accent }}" stroke="{{ c.shirt.stroke }}" sigla="{{ lens }}" logo="{{ c.logo }}" ff="{{ c.font.ff }}" fw="{{ c.font.fw }}" ls="{{ c.font.ls }}" frase="{{ frase }}" side="front" hint-size="100%,260px"></dc-import>
+<dl style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px">
+<dt style="color: #5A5F6B">Fondo</dt><dd style="margin: 0; font-weight: 600">{{ c.fondoLabel }}</dd>
+<dt style="color: #5A5F6B">Logo</dt><dd style="margin: 0; font-weight: 600">{{ c.logoLabel }}</dd>
+<dt style="color: #5A5F6B">Tipografía</dt><dd style="margin: 0; font-weight: 600">{{ c.font.nombre }}</dd>
+</dl>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section aria-label="Resultados por variable" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px">
+<sc-for list="{{ variables }}" as="v" hint-placeholder-count="3">
+<div style="background: #FFFFFF; border: 1px solid #E0DED8; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700">{{ v.title }}</h3>
+<p style="margin: 0; font-size: 14px; color: #3F444F">Gana <strong>{{ v.winner }}</strong> con {{ v.winnerPct }}</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{ v.options }}" as="o" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="font-weight: {{o.weight}}">{{ o.label }}</span><span style="font-variant-numeric: tabular-nums; color: #3F444F">{{ o.count }} · {{ o.pct }}</span></div>
+<div style="height: 10px; border-radius: 999px; background: #ECEAE5; overflow: hidden"><div style="height: 100%; width: {{o.width}}%; background: {{o.bar}}; border-radius: 999px"></div></div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</section>
+
+<section aria-label="Desglose por carrera" style="background: #FFFFFF; border: 1px solid #E0DED8; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700">Desglose por carrera</h2>
+<p style="margin: 0; font-size: 14px; color: #3F444F">Para confirmar que el frente ganador también tiene respaldo dentro de cada carrera.</p>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 720px; border-collapse: collapse; font-size: 14px">
+<thead>
+<tr style="text-align: left; color: #5A5F6B">
+<th scope="col" style="padding: 10px 12px; border-bottom: 1px solid #E0DED8; font-weight: 600">Carrera</th>
+<th scope="col" style="padding: 10px 12px; border-bottom: 1px solid #E0DED8; font-weight: 600">Participación</th>
+<th scope="col" style="padding: 10px 12px; border-bottom: 1px solid #E0DED8; font-weight: 600">Fondo</th>
+<th scope="col" style="padding: 10px 12px; border-bottom: 1px solid #E0DED8; font-weight: 600">Logo</th>
+<th scope="col" style="padding: 10px 12px; border-bottom: 1px solid #E0DED8; font-weight: 600">Tipografía</th>
+<th scope="col" style="padding: 10px 12px; border-bottom: 1px solid #E0DED8; font-weight: 600">Combinación #1</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{ porCarrera }}" as="r" hint-placeholder-count="4">
+<tr>
+<th scope="row" style="padding: 12px; border-bottom: 1px solid #ECEAE5; text-align: left; font-weight: 700"><span style="display: inline-flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {{r.color}}"></span>{{ r.id }}</span></th>
+<td style="padding: 12px; border-bottom: 1px solid #ECEAE5; font-variant-numeric: tabular-nums">{{ r.votos }}/{{ r.inscritos }} · {{ r.part }}</td>
+<td style="padding: 12px; border-bottom: 1px solid #ECEAE5">{{ r.fondo }}</td>
+<td style="padding: 12px; border-bottom: 1px solid #ECEAE5">{{ r.logo }}</td>
+<td style="padding: 12px; border-bottom: 1px solid #ECEAE5">{{ r.font }}</td>
+<td style="padding: 12px; border-bottom: 1px solid #ECEAE5">{{ r.combo }}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"frase":{"editor":"text","default":"[FRASE CANDIDATA]"},"$preview":{"width":1280,"height":1900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filtro: 'todas', lens: 'ISND' };
+    this.CAREERS = [
+      { id: 'LEN', color: '#EE803C', fondo: '#593924', inscritos: 38 },
+      { id: 'LCJ', color: '#D61A28', fondo: '#521C1F', inscritos: 27 },
+      { id: 'IDN', color: '#2BAC6E', fondo: '#224532', inscritos: 30 },
+      { id: 'ISND', color: '#00AFAC', fondo: '#164644', inscritos: 30 }
+    ];
+    this.FONDOS = [{ id: 'blanco', label: 'Blanco' }, { id: 'negro', label: 'Negro' }, { id: 'beige', label: 'Beige' }, { id: 'carrera', label: 'Color de la carrera' }];
+    this.LOGOS = [{ id: 'siglas', label: 'Siglas + 2027' }, { id: 'linea', label: 'Siglas + línea' }, { id: 'frase', label: 'Frase + siglas' }, { id: 'insignia', label: 'Insignia' }];
+    this.FONTS = [
+      { id: 'bebas', label: 'Bebas Neue', nombre: 'Bebas Neue', ff: "'Bebas Neue', sans-serif", fw: 400, ls: '0.04em' },
+      { id: 'montserrat', label: 'Montserrat', nombre: 'Montserrat', ff: "'Montserrat', sans-serif", fw: 800, ls: '0em' },
+      { id: 'graduate', label: 'Graduate', nombre: 'Graduate', ff: "'Graduate', serif", fw: 400, ls: '0.02em' },
+      { id: 'playfair', label: 'Playfair Display', nombre: 'Playfair Display', ff: "'Playfair Display', serif", fw: 800, ls: '0em' },
+      { id: 'mono', label: 'Space Mono', nombre: 'Space Mono', ff: "'Space Mono', monospace", fw: 700, ls: '-0.02em' }
+    ];
+    this.votes = this.sampleVotes();
+  }
+  // Datos de ejemplo (deterministas). En la versión final, estas filas vienen de Google Sheets.
+  sampleVotes() {
+    let seed = 2027;
+    const rnd = () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const pick = (ids, w) => { let r = rnd() * w.reduce((a, b) => a + b, 0); for (let i = 0; i < ids.length; i++) { r -= w[i]; if (r <= 0) return ids[i]; } return ids[ids.length - 1]; };
+    const rates = { LEN: 0.79, LCJ: 0.74, IDN: 0.83, ISND: 0.9 };
+    const out = [];
+    this.CAREERS.forEach((c) => {
+      const n = Math.round(c.inscritos * rates[c.id]);
+      for (let i = 0; i < n; i++) {
+        out.push({
+          carrera: c.id,
+          fondo: pick(['blanco', 'negro', 'beige', 'carrera'], [20, 34, 14, 32]),
+          logo: pick(['siglas', 'linea', 'frase', 'insignia'], [36, 26, 18, 20]),
+          tipografia: pick(['bebas', 'montserrat', 'graduate', 'playfair', 'mono'], [32, 26, 18, 9, 15])
+        });
+      }
+    });
+    return out;
+  }
+  rgb(h) { const n = parseInt(h.replace('#', ''), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  hex(c) { return '#' + c.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase(); }
+  mix(a, b, t) { const x = this.rgb(a), y = this.rgb(b); return this.hex(x.map((v, i) => v + (y[i] - v) * t)); }
+  lum(h) { const c = this.rgb(h).map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
+  contrast(a, b) { const x = this.lum(a), y = this.lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+  shirtFor(c, f) {
+    const fill = f === 'blanco' ? '#FFFFFF' : f === 'negro' ? '#151515' : f === 'beige' ? '#E6DAC3' : c.fondo;
+    const dark = this.lum(fill) < 0.3;
+    return {
+      fill, ink: dark ? '#F4F1EA' : '#161616', stroke: dark ? '#00000066' : '#0000002E',
+      accent: (dark && this.contrast(c.color, fill) < 3) ? this.mix(c.color, '#FFFFFF', 0.4) : c.color
+    };
+  }
+  pct(n, d) { return d ? Math.round((n / d) * 100) + '%' : '0%'; }
+  tally(rows, key, opts) {
+    const counts = opts.map((o) => ({ ...o, count: rows.filter((r) => r[key] === o.id).length }));
+    const max = Math.max(1, ...counts.map((o) => o.count));
+    const sorted = counts.slice().sort((a, b) => b.count - a.count);
+    const topId = sorted[0].id;
+    return {
+      sorted,
+      options: sorted.map((o) => ({ ...o, pct: this.pct(o.count, rows.length), width: Math.round((o.count / max) * 100), bar: o.id === topId ? '#16181D' : '#A9A59C', weight: o.id === topId ? 700 : 500 }))
+    };
+  }
+  label(list, id) { return (list.find((x) => x.id === id) || {}).label || id; }
+  combos(rows) {
+    const m = {};
+    rows.forEach((r) => { const k = r.fondo + '|' + r.logo + '|' + r.tipografia; m[k] = (m[k] || 0) + 1; });
+    return Object.keys(m).map((k) => { const [fondo, logo, tipografia] = k.split('|'); return { fondo, logo, tipografia, count: m[k] }; }).sort((a, b) => b.count - a.count);
+  }
+  renderVals() {
+    const s = this.state;
+    const rows = s.filtro === 'todas' ? this.votes : this.votes.filter((v) => v.carrera === s.filtro);
+    const base = s.filtro === 'todas' ? this.CAREERS.reduce((a, c) => a + c.inscritos, 0) : this.CAREERS.find((c) => c.id === s.filtro).inscritos;
+    const total = rows.length;
+    const lensId = s.filtro === 'todas' ? s.lens : s.filtro;
+    const lensCareer = this.CAREERS.find((c) => c.id === lensId);
+    const sel = (on) => on ? { bg: '#16181D', fg: '#FFFFFF', border: '#16181D', pressed: 'true' } : { bg: '#FFFFFF', fg: '#16181D', border: '#D4D2CC', pressed: 'false' };
+
+    const tF = this.tally(rows, 'fondo', this.FONDOS);
+    const tL = this.tally(rows, 'logo', this.LOGOS);
+    const tT = this.tally(rows, 'tipografia', this.FONTS);
+    const win = (title, t) => {
+      const [a, b] = t.sorted;
+      const d = a.count - (b ? b.count : 0);
+      return { title, label: a.label, count: a.count, pct: this.pct(a.count, total), gap: d === 0 ? 'empate' : '+' + d + ' sobre ' + b.label };
+    };
+
+    const top3 = this.combos(rows).slice(0, 3).map((c, i) => {
+      const font = this.FONTS.find((f) => f.id === c.tipografia);
+      return {
+        rank: i + 1, count: c.count, pct: this.pct(c.count, total), logo: c.logo, font,
+        fondoLabel: this.label(this.FONDOS, c.fondo), logoLabel: this.label(this.LOGOS, c.logo),
+        shirt: this.shirtFor(lensCareer, c.fondo), ring: i === 0 ? '#16181D' : 'transparent'
+      };
+    });
+
+    const porCarrera = this.CAREERS.map((c) => {
+      const rs = this.votes.filter((v) => v.carrera === c.id);
+      const top = (key, list) => this.tally(rs, key, list).sorted[0].label;
+      const cb = this.combos(rs)[0];
+      return {
+        id: c.id, color: c.color, votos: rs.length, inscritos: c.inscritos, part: this.pct(rs.length, c.inscritos),
+        fondo: top('fondo', this.FONDOS), logo: top('logo', this.LOGOS), font: top('tipografia', this.FONTS),
+        combo: cb ? this.label(this.FONDOS, cb.fondo) + ' · ' + this.label(this.LOGOS, cb.logo) + ' · ' + this.label(this.FONTS, cb.tipografia) + ' (' + cb.count + ')' : '—'
+      };
+    });
+
+    return {
+      frase: this.props.frase ?? '[FRASE CANDIDATA]',
+      filters: [{ id: 'todas', label: 'Toda la promo' }].concat(this.CAREERS.map((c) => ({ id: c.id, label: c.id }))).map((f) => ({ ...f, ...sel(s.filtro === f.id), pick: () => this.setState({ filtro: f.id }) })),
+      lenses: this.CAREERS.map((c) => ({ id: c.id, ...sel(lensId === c.id), pick: () => this.setState({ lens: c.id, filtro: s.filtro === 'todas' ? 'todas' : c.id }) })),
+      lens: lensId,
+      total, base, partPct: this.pct(total, base), partW: Math.round((total / base) * 100),
+      winners: [win('Fondo', tF), win('Logo', tL), win('Tipografía', tT)],
+      top3,
+      variables: [
+        { title: 'Color de fondo', winner: tF.sorted[0].label, winnerPct: this.pct(tF.sorted[0].count, total), options: tF.options },
+        { title: 'Logo frontal', winner: tL.sorted[0].label, winnerPct: this.pct(tL.sorted[0].count, total), options: tL.options },
+        { title: 'Tipografía', winner: tT.sorted[0].label, winnerPct: this.pct(tT.sorted[0].count, total), options: tT.options }
+      ],
+      porCarrera
+    };
+  }
+}
+</script>
+</body>
+</html>

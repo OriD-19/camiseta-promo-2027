@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Camiseta Promo 2027 — Visualizador</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Graduate&amp;family=Inter:wght@400;500;600;700&amp;family=Montserrat:wght@800&amp;family=Playfair+Display:wght@800&amp;family=Space+Grotesk:wght@500;700&amp;family=Space+Mono:wght@400;700&amp;display=swap">
+<style>
+body{margin:0;background:#F4F3F0}
+a{color:#2B4ACB}a:hover{color:#1C318C}
+input,select,textarea,button{font-family:inherit}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid #2B4ACB;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: Inter, sans-serif; color: #16181D; background: #F4F3F0; min-height: 100vh">
+<div style="max-width: 1240px; margin: 0 auto; padding: 32px 24px 64px; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #5A5F6B">ESEN · Promoción 2027</p>
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 40px; line-height: 1.1; font-weight: 700">Elegí el frente de nuestra camiseta</h1>
+<p style="margin: 0; max-width: 720px; font-size: 16px; line-height: 1.55; color: #3F444F">Votamos un solo frente para toda la promoción: fondo, logo y tipografía. La espalda la diseña cada carrera con sus propias referencias, siguiendo la misma línea gráfica.</p>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start">
+
+<section aria-label="Vista previa" style="flex: 1 1 460px; min-width: 0; background: #E9E7E2; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px">
+<div role="group" aria-label="Lado" style="display: flex; background: #FFFFFF; border-radius: 999px; padding: 4px; gap: 4px">
+<sc-for list="{{ sides }}" as="s" hint-placeholder-count="2">
+<button type="button" onClick="{{ s.pick }}" aria-pressed="{{ s.pressed }}" style="min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer; background: {{s.bg}}; color: {{s.fg}}">{{ s.label }}</button>
+</sc-for>
+</div>
+<div role="group" aria-label="Vista" style="display: flex; background: #FFFFFF; border-radius: 999px; padding: 4px; gap: 4px">
+<sc-for list="{{ views }}" as="v" hint-placeholder-count="2">
+<button type="button" onClick="{{ v.pick }}" aria-pressed="{{ v.pressed }}" style="min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer; background: {{v.bg}}; color: {{v.fg}}">{{ v.label }}</button>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{ isSingle }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px">
+<div style="width: 100%; max-width: 460px">
+<dc-import name="Shirt" fill="{{ cur.fill }}" ink="{{ cur.ink }}" accent="{{ cur.accent }}" stroke="{{ cur.stroke }}" sigla="{{ cur.id }}" logo="{{ logo }}" ff="{{ font.ff }}" fw="{{ font.fw }}" ls="{{ font.ls }}" frase="{{ frase }}" side="{{ side }}" hint-size="100%,449px"></dc-import>
+</div>
+<p style="margin: 0; font-size: 14px; color: #3F444F">Viendo como <strong>{{ cur.nombre }}</strong></p>
+</div>
+</sc-if>
+
+<sc-if value="{{ isGrid }}" hint-placeholder-val="{{ false }}">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{ grid }}" as="c" hint-placeholder-count="4">
+<div style="background: #F4F3F0; border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 6px">
+<dc-import name="Shirt" fill="{{ c.shirt.fill }}" ink="{{ c.shirt.ink }}" accent="{{ c.shirt.accent }}" stroke="{{ c.shirt.stroke }}" sigla="{{ c.id }}" logo="{{ logo }}" ff="{{ font.ff }}" fw="{{ font.fw }}" ls="{{ font.ls }}" frase="{{ frase }}" side="{{ side }}" hint-size="100%,215px"></dc-import>
+<p style="margin: 0; text-align: center; font-size: 13px; font-weight: 600">{{ c.id }}</p>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 1.5; color: #3F444F">Así se ve la uniformidad: mismo logo y tipografía en las 4 carreras. Con «Color de la carrera», solo cambia el fondo.</p>
+</sc-if>
+</section>
+
+<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="padding: 0; margin-bottom: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A5F6B">Ver como</legend>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{ careers }}" as="c" hint-placeholder-count="4">
+<button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" title="{{ c.nombre }}" style="min-height: 44px; border-radius: 10px; border: 2px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {{c.color}}"></span>{{ c.id }}</button>
+</sc-for>
+</div>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="padding: 0; margin-bottom: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A5F6B">1 · Color de fondo</legend>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{ fondos }}" as="f" hint-placeholder-count="4">
+<button type="button" onClick="{{ f.pick }}" aria-pressed="{{ f.pressed }}" style="min-height: 52px; padding: 8px 12px; border-radius: 12px; border: 2px solid {{f.border}}; background: #FFFFFF; color: #16181D; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; text-align: left"><span aria-hidden="true" style="flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid #C9C6BF; background: {{f.swatch}}"></span>{{ f.label }}</button>
+</sc-for>
+</div>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="padding: 0; margin-bottom: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A5F6B">2 · Logo frontal</legend>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{ logos }}" as="l" hint-placeholder-count="4">
+<button type="button" onClick="{{ l.pick }}" aria-pressed="{{ l.pressed }}" style="min-height: 64px; padding: 10px 12px; border-radius: 12px; border: 2px solid {{l.border}}; background: #FFFFFF; color: #16181D; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left"><span style="font-size: 14px; font-weight: 700">{{ l.label }}</span><span style="font-size: 12px; color: #5A5F6B">{{ l.desc }}</span></button>
+</sc-for>
+</div>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="padding: 0; margin-bottom: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A5F6B">3 · Tipografía</legend>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ fonts }}" as="t" hint-placeholder-count="5">
+<button type="button" onClick="{{ t.pick }}" aria-pressed="{{ t.pressed }}" style="min-height: 56px; padding: 8px 14px; border-radius: 12px; border: 2px solid {{t.border}}; background: #FFFFFF; color: #16181D; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left"><span style="font-family: {{t.ff}}; font-weight: {{t.fw}}; letter-spacing: {{t.ls}}; font-size: 26px; line-height: 1">{{ t.sample }}</span><span style="display: flex; flex-direction: column; align-items: flex-end"><span style="font-size: 13px; font-weight: 700">{{ t.nombre }}</span><span style="font-size: 12px; color: #5A5F6B">{{ t.desc }}</span></span></button>
+</sc-for>
+</div>
+</fieldset>
+
+</div>
+</div>
+
+<section aria-label="Tu voto" style="background: #FFFFFF; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 20px; border: 1px solid #E0DED8">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700">Enviá tu voto</h2>
+<p style="margin: 0; font-size: 15px; color: #3F444F">Tu combinación: <strong>{{ resumen }}</strong></p>
+</div>
+
+<sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-nombre" style="font-size: 14px; font-weight: 600">Nombre completo</label>
+<input id="f-nombre" type="text" value="{{ form.nombre }}" onChange="{{ onNombre }}" autocomplete="name" style="min-height: 44px; padding: 0 12px; border: 1px solid #B9B6AE; border-radius: 10px; font-size: 15px; color: #16181D; background: #FFFFFF">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-correo" style="font-size: 14px; font-weight: 600">Correo institucional</label>
+<input id="f-correo" type="email" value="{{ form.correo }}" onChange="{{ onCorreo }}" autocomplete="email" placeholder="usuario@esen.edu.sv" style="min-height: 44px; padding: 0 12px; border: 1px solid #B9B6AE; border-radius: 10px; font-size: 15px; color: #16181D; background: #FFFFFF">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-carrera" style="font-size: 14px; font-weight: 600">Tu carrera</label>
+<select id="f-carrera" value="{{ form.carrera }}" onChange="{{ onCarrera }}" style="min-height: 44px; padding: 0 10px; border: 1px solid #B9B6AE; border-radius: 10px; font-size: 15px; color: #16181D; background: #FFFFFF">
+<option value="">Seleccioná…</option>
+<option value="LEN">LEN — Economía y Negocios</option>
+<option value="LCJ">LCJ — Ciencias Jurídicas</option>
+<option value="IDN">IDN — Ingeniería de Negocios</option>
+<option value="ISND">ISND — Software y Negocios Digitales</option>
+</select>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-coment" style="font-size: 14px; font-weight: 600">Comentario o propuesta de frase (opcional)</label>
+<textarea id="f-coment" rows="3" value="{{ form.comentario }}" onChange="{{ onComentario }}" style="padding: 10px 12px; border: 1px solid #B9B6AE; border-radius: 10px; font-size: 15px; color: #16181D; background: #FFFFFF; resize: vertical"></textarea>
+</div>
+<sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+<p role="alert" style="margin: 0; font-size: 14px; font-weight: 600; color: #A3261B">{{ error }}</p>
+</sc-if>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+<button type="button" onClick="{{ submit }}" style="min-height: 48px; padding: 0 28px; border: 0; border-radius: 12px; background: #16181D; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">Enviar mi voto</button>
+<p style="margin: 0; font-size: 13px; color: #5A5F6B">Si votás más de una vez, cuenta solo tu último voto.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="background: #E8F3EC; border-radius: 14px; padding: 18px 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<p style="margin: 0; font-size: 15px; color: #14532D"><strong>¡Voto registrado, {{ form.nombre }}!</strong> (simulado en este prototipo)</p>
+<button type="button" onClick="{{ reset }}" style="min-height: 44px; padding: 0 18px; border: 1px solid #14532D; border-radius: 10px; background: transparent; color: #14532D; font-size: 14px; font-weight: 600; cursor: pointer">Cambiar mi voto</button>
+</div>
+</sc-if>
+
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"colorLEN":{"editor":"color","default":"#EE803C","section":"Color oficial (acento)"},"colorLCJ":{"editor":"color","default":"#D61A28","section":"Color oficial (acento)"},"colorIDN":{"editor":"color","default":"#2BAC6E","section":"Color oficial (acento)"},"colorISND":{"editor":"color","default":"#00AFAC","section":"Color oficial (acento)"},"fondoLEN":{"editor":"color","default":"#593924","section":"Fondo de carrera (neutralizado)"},"fondoLCJ":{"editor":"color","default":"#521C1F","section":"Fondo de carrera (neutralizado)"},"fondoIDN":{"editor":"color","default":"#224532","section":"Fondo de carrera (neutralizado)"},"fondoISND":{"editor":"color","default":"#164644","section":"Fondo de carrera (neutralizado)"},"frase":{"editor":"text","default":"[FRASE CANDIDATA]","section":"Logo"},"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      carrera: 'ISND', fondo: 'blanco', logo: 'siglas', fuente: 'bebas',
+      side: 'front', view: 'single', sent: false, error: '',
+      form: { nombre: '', correo: '', carrera: '', comentario: '' }
+    };
+  }
+  rgb(h) { const n = parseInt(h.replace('#', ''), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  hex(c) { return '#' + c.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase(); }
+  mix(a, b, t) { const x = this.rgb(a), y = this.rgb(b); return this.hex(x.map((v, i) => v + (y[i] - v) * t)); }
+  lum(h) { const c = this.rgb(h).map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
+  careerList() {
+    const p = this.props;
+    return [
+      { id: 'LEN', nombre: 'Lic. en Economía y Negocios', color: p.colorLEN ?? '#EE803C', fondo: p.fondoLEN ?? '#593924' },
+      { id: 'LCJ', nombre: 'Lic. en Ciencias Jurídicas', color: p.colorLCJ ?? '#D61A28', fondo: p.fondoLCJ ?? '#521C1F' },
+      { id: 'IDN', nombre: 'Ingeniería de Negocios', color: p.colorIDN ?? '#2BAC6E', fondo: p.fondoIDN ?? '#224532' },
+      { id: 'ISND', nombre: 'Ing. de Software y Negocios Digitales', color: p.colorISND ?? '#00AFAC', fondo: p.fondoISND ?? '#164644' }
+    ];
+  }
+  contrast(a, b) { const x = this.lum(a), y = this.lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+  shirtFor(c) {
+    const f = this.state.fondo;
+    const fill = f === 'blanco' ? '#FFFFFF' : f === 'negro' ? '#151515' : f === 'beige' ? '#E6DAC3' : c.fondo;
+    const dark = this.lum(fill) < 0.3;
+    const ink = dark ? '#F4F1EA' : '#161616';
+    // El color oficial va directo como acento; solo se aclara si casi no se distingue del fondo (p. ej. rojo LCJ sobre vino).
+    const accent = (dark && this.contrast(c.color, fill) < 3) ? this.mix(c.color, '#FFFFFF', 0.4) : c.color;
+    const stroke = dark ? '#00000066' : '#0000002E';
+    return { fill, ink, accent, stroke };
+  }
+  sel(on) { return on ? { border: '#16181D', bg: '#16181D', fg: '#FFFFFF', pressed: 'true' } : { border: '#D4D2CC', bg: '#FFFFFF', fg: '#16181D', pressed: 'false' }; }
+  esc(v) { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+  renderVals() {
+    const s = this.state;
+    const frase = this.props.frase ?? '[FRASE CANDIDATA]';
+    const FONTS = [
+      { id: 'bebas', nombre: 'Bebas Neue', desc: 'Condensada', ff: "'Bebas Neue', sans-serif", fw: 400, ls: '0.04em' },
+      { id: 'montserrat', nombre: 'Montserrat', desc: 'Geométrica', ff: "'Montserrat', sans-serif", fw: 800, ls: '0em' },
+      { id: 'graduate', nombre: 'Graduate', desc: 'Varsity / college', ff: "'Graduate', serif", fw: 400, ls: '0.02em' },
+      { id: 'playfair', nombre: 'Playfair Display', desc: 'Serif clásica', ff: "'Playfair Display', serif", fw: 800, ls: '0em' },
+      { id: 'mono', nombre: 'Space Mono', desc: 'Monoespaciada', ff: "'Space Mono', monospace", fw: 700, ls: '-0.02em' }
+    ];
+    const LOGOS = [
+      { id: 'siglas', label: 'Siglas + 2027', desc: 'Lo más directo' },
+      { id: 'linea', label: 'Siglas + línea', desc: 'Con «PROMO 2027»' },
+      { id: 'frase', label: 'Frase + siglas', desc: 'Incluye una frase común' },
+      { id: 'insignia', label: 'Insignia', desc: 'Sello circular' }
+    ];
+    const careersRaw = this.careerList();
+    const curRaw = careersRaw.find((c) => c.id === s.carrera) || careersRaw[3];
+    const FONDOS = [
+      { id: 'blanco', label: 'Blanco', swatch: '#FFFFFF' },
+      { id: 'negro', label: 'Negro', swatch: '#151515' },
+      { id: 'beige', label: 'Beige', swatch: '#E6DAC3' },
+      { id: 'carrera', label: 'Color de la carrera', swatch: curRaw.fondo }
+    ];
+    const font = FONTS.find((f) => f.id === s.fuente) || FONTS[0];
+    const logoObj = LOGOS.find((l) => l.id === s.logo) || LOGOS[0];
+    const fondoObj = FONDOS.find((f) => f.id === s.fondo) || FONDOS[0];
+    const setForm = (k) => (e) => {
+      const v = e.target.value;
+      const patch = { form: { ...this.state.form, [k]: v }, error: '' };
+      if (k === 'carrera' && v) patch.carrera = v;
+      this.setState(patch);
+    };
+    return {
+      frase, font, logo: s.logo, side: s.side,
+      cur: { ...curRaw, ...this.shirtFor(curRaw) },
+      isSingle: s.view === 'single', isGrid: s.view === 'grid',
+      grid: careersRaw.map((c) => ({ ...c, shirt: this.shirtFor(c) })),
+      sides: [{ id: 'front', label: 'Frente' }, { id: 'back', label: 'Espalda' }].map((x) => ({ ...x, ...this.sel(s.side === x.id), pick: () => this.setState({ side: x.id }) })),
+      views: [{ id: 'single', label: '1 carrera' }, { id: 'grid', label: 'Las 4 carreras' }].map((x) => ({ ...x, ...this.sel(s.view === x.id), pick: () => this.setState({ view: x.id }) })),
+      careers: careersRaw.map((c) => ({ ...c, ...this.sel(s.carrera === c.id), pick: () => this.setState({ carrera: c.id }) })),
+      fondos: FONDOS.map((f) => ({ ...f, border: s.fondo === f.id ? '#16181D' : '#D4D2CC', pressed: s.fondo === f.id ? 'true' : 'false', pick: () => this.setState({ fondo: f.id }) })),
+      logos: LOGOS.map((l) => ({ ...l, border: s.logo === l.id ? '#16181D' : '#D4D2CC', pressed: s.logo === l.id ? 'true' : 'false', pick: () => this.setState({ logo: l.id }) })),
+      fonts: FONTS.map((t) => ({ ...t, sample: curRaw.id + ' 2027', border: s.fuente === t.id ? '#16181D' : '#D4D2CC', pressed: s.fuente === t.id ? 'true' : 'false', pick: () => this.setState({ fuente: t.id }) })),
+      resumen: fondoObj.label + ' · ' + logoObj.label + ' · ' + font.nombre,
+      form: s.form,
+      onNombre: setForm('nombre'), onCorreo: setForm('correo'), onCarrera: setForm('carrera'), onComentario: setForm('comentario'),
+      hasError: !!s.error, error: s.error,
+      notSent: !s.sent, sent: s.sent,
+      submit: () => {
+        const f = this.state.form;
+        if (!f.nombre.trim() || !f.correo.trim() || !f.carrera) { this.setState({ error: 'Completá tu nombre, correo institucional y carrera.' }); return; }
+        if (!/^[a-z0-9._%+-]+@esen\.edu\.sv$/i.test(f.correo.trim())) { this.setState({ error: 'Usá tu correo institucional (@esen.edu.sv).' }); return; }
+        this.setState({ sent: true, error: '' });
+      },
+      reset: () => this.setState({ sent: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

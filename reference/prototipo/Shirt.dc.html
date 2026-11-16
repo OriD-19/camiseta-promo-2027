@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Camiseta — vista previa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Graduate&amp;family=Inter:wght@400;500;600;700&amp;family=Montserrat:wght@800&amp;family=Playfair+Display:wght@800&amp;family=Space+Mono:wght@400;700&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="position: relative; width: 100%; aspect-ratio: 400 / 390; container-type: inline-size; font-family: Inter, sans-serif; color: #161616">
+<svg viewBox="0 0 400 390" role="img" aria-label="{{ label }}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block">
+<path d="M140 26 C162 44 238 44 260 26 L350 58 C360 62 366 70 365 80 L352 142 C350 150 342 154 334 152 L304 144 L306 352 C306 362 298 370 288 370 L112 370 C102 370 94 362 94 352 L96 144 L66 152 C58 154 50 150 48 142 L35 80 C34 70 40 62 50 58 Z" fill="{{ fill }}" stroke="{{ stroke }}" stroke-width="2" stroke-linejoin="round"></path>
+<path d="{{ neckD }}" fill="none" stroke="{{ stroke }}" stroke-width="2"></path>
+<path d="M96 144 C98 116 104 90 116 62" fill="none" stroke="{{ stroke }}" stroke-width="1.5"></path>
+<path d="M304 144 C302 116 296 90 284 62" fill="none" stroke="{{ stroke }}" stroke-width="1.5"></path>
+</svg>
+
+<sc-if value="{{ isFront }}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; left: 56%; width: 24%; top: 21%; display: flex; flex-direction: column; align-items: center; text-align: center; color: {{ink}}; font-family: {{ff}}; font-weight: {{fw}}; letter-spacing: {{ls}}">
+
+<sc-if value="{{ isSiglas }}" hint-placeholder-val="{{ true }}">
+<div style="font-size: 6.4cqw; line-height: 0.95">{{ sigla }}</div>
+<div style="font-size: 3cqw; line-height: 1.15; color: {{accent}}">2027</div>
+</sc-if>
+
+<sc-if value="{{ isLinea }}" hint-placeholder-val="{{ false }}">
+<div style="font-size: 5.4cqw; line-height: 1">{{ sigla }}</div>
+<div style="width: 80%; height: 0.35cqw; margin: 0.9cqw 0; background: {{accent}}"></div>
+<div style="font-size: 1.6cqw; letter-spacing: 0.28em; line-height: 1">PROMO 2027</div>
+</sc-if>
+
+<sc-if value="{{ isFrase }}" hint-placeholder-val="{{ false }}">
+<div style="font-size: 1.6cqw; line-height: 1.25; letter-spacing: 0.06em; text-transform: uppercase; color: {{accent}}; margin-bottom: 0.9cqw">{{ frase }}</div>
+<div style="font-size: 5.4cqw; line-height: 0.95">{{ sigla }}</div>
+<div style="font-size: 2.2cqw; line-height: 1.2">2027</div>
+</sc-if>
+
+<sc-if value="{{ isInsignia }}" hint-placeholder-val="{{ false }}">
+<div style="width: 15cqw; height: 15cqw; border-radius: 50%; border: 0.45cqw solid {{ink}}; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35cqw">
+<div style="font-size: 1.3cqw; letter-spacing: 0.25em; color: {{accent}}">ESEN</div>
+<div style="font-size: 3.8cqw; line-height: 1">{{ sigla }}</div>
+<div style="width: 50%; height: 0.3cqw; background: {{accent}}"></div>
+<div style="font-size: 1.8cqw; line-height: 1">2027</div>
+</div>
+</sc-if>
+
+</div>
+</sc-if>
+
+<sc-if value="{{ isBack }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 30%; width: 40%; top: 11%; text-align: center; font-family: {{ff}}; font-weight: {{fw}}; letter-spacing: {{ls}}; font-size: 3.4cqw; color: {{ink}}">{{ sigla }} 2027</div>
+<div style="position: absolute; left: 29%; width: 42%; top: 22%; height: 52%; box-sizing: border-box; border: 0.5cqw dashed {{ink}}; border-radius: 3cqw; opacity: 0.75; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5cqw; padding: 3cqw; text-align: center; color: {{ink}}">
+<div style="font-size: 3.6cqw; font-weight: 700; line-height: 1.2">Diseño propio de {{ sigla }}</div>
+<div style="font-size: 2.6cqw; line-height: 1.35">Referencias de cada carrera, misma línea gráfica del frente</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"fill":{"editor":"color","default":"#FFFFFF"},"ink":{"editor":"color","default":"#161616"},"accent":{"editor":"color","default":"#00AFAC"},"stroke":{"editor":null,"default":"#0000002E"},"sigla":{"editor":"enum","options":["LEN","LCJ","IDN","ISND"],"default":"ISND"},"logo":{"editor":"enum","options":["siglas","linea","frase","insignia"],"default":"siglas"},"side":{"editor":"enum","options":["front","back"],"default":"front"},"ff":{"editor":null,"default":"&#39;Bebas Neue&#39;, sans-serif"},"fw":{"editor":null,"default":400},"ls":{"editor":null,"default":"0.04em"},"frase":{"editor":"text","default":"[FRASE CANDIDATA]"},"$preview":{"width":440,"height":429}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const side = p.side ?? 'front';
+    const logo = p.logo ?? 'siglas';
+    const sigla = p.sigla ?? 'ISND';
+    return {
+      fill: p.fill ?? '#FFFFFF', ink: p.ink ?? '#161616', accent: p.accent ?? '#00AFAC', stroke: p.stroke ?? '#0000002E',
+      sigla, frase: p.frase ?? '[FRASE CANDIDATA]',
+      ff: p.ff ?? "'Bebas Neue', sans-serif", fw: p.fw ?? 400, ls: p.ls ?? '0.04em',
+      isFront: side === 'front', isBack: side === 'back',
+      isSiglas: logo === 'siglas', isLinea: logo === 'linea', isFrase: logo === 'frase', isInsignia: logo === 'insignia',
+      neckD: side === 'front' ? 'M140 26 C162 60 238 60 260 26' : 'M140 26 C162 38 238 38 260 26',
+      label: 'Camiseta ' + sigla + ', ' + (side === 'front' ? 'frente' : 'espalda')
+    };
+  }
+}
+</script>
+</body>
+</html>
