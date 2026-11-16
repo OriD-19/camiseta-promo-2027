@@ -1,0 +1,124 @@
+/* Camiseta: proporciones portadas de reference/prototipo/Shirt.dc.html. Todo el texto en cqw. */
+:root {
+  --logo-left: 56%;
+  --logo-top: 21%;
+  --logo-width: 24%;
+}
+
+.shirt {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 400 / 390;
+  container-type: inline-size;
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--shirt-ink);
+  user-select: none;
+}
+
+.shirt__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.shirt__svg path {
+  transition: fill 180ms ease, stroke 180ms ease;
+}
+
+/* ---------- Frente: capa del logo ---------- */
+.shirt__logo {
+  position: absolute;
+  left: var(--logo-left);
+  top: var(--logo-top);
+  width: var(--logo-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--shirt-ink);
+  font-family: var(--shirt-ff);
+  font-weight: var(--shirt-fw);
+  letter-spacing: var(--shirt-ls);
+  white-space: nowrap;
+}
+
+.shirt__logo > * { max-width: 100%; }
+
+/* Siglas + 2027 */
+.lg-siglas__sigla { font-size: 6.4cqw; line-height: 0.95; }
+.lg-siglas__year  { font-size: 3cqw; line-height: 1.15; color: var(--shirt-accent); }
+
+/* Siglas + línea */
+.lg-linea__sigla { font-size: 5.4cqw; line-height: 1; }
+.lg-linea__rule  { width: 80%; height: 0.35cqw; margin: 0.9cqw 0; background: var(--shirt-accent); }
+.lg-linea__promo { font-size: 1.6cqw; letter-spacing: 0.28em; line-height: 1; }
+
+/* Frase + siglas */
+.lg-frase__frase {
+  font-size: 1.6cqw;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--shirt-accent);
+  margin-bottom: 0.9cqw;
+  white-space: normal;
+}
+.lg-frase__sigla { font-size: 5.4cqw; line-height: 0.95; }
+.lg-frase__year  { font-size: 2.2cqw; line-height: 1.2; }
+
+/* Insignia */
+.lg-insignia__ring {
+  width: 15cqw;
+  height: 15cqw;
+  border-radius: 50%;
+  border: 0.45cqw solid var(--shirt-ink);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35cqw;
+}
+.lg-insignia__esen  { font-size: 1.3cqw; letter-spacing: 0.25em; color: var(--shirt-accent); }
+.lg-insignia__sigla { font-size: 3.8cqw; line-height: 1; }
+.lg-insignia__rule  { width: 50%; height: 0.3cqw; background: var(--shirt-accent); }
+.lg-insignia__year  { font-size: 1.8cqw; line-height: 1; }
+
+/* ---------- Espalda ---------- */
+.shirt__nape {
+  position: absolute;
+  left: 30%;
+  width: 40%;
+  top: 11%;
+  text-align: center;
+  font-family: var(--shirt-ff);
+  font-weight: var(--shirt-fw);
+  letter-spacing: var(--shirt-ls);
+  font-size: 3.4cqw;
+  color: var(--shirt-ink);
+  white-space: nowrap;
+}
+
+.shirt__back-box {
+  position: absolute;
+  left: 29%;
+  width: 42%;
+  top: 22%;
+  height: 52%;
+  box-sizing: border-box;
+  border: 0.5cqw dashed var(--shirt-ink);
+  border-radius: 3cqw;
+  opacity: 0.75;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5cqw;
+  padding: 3cqw;
+  text-align: center;
+  color: var(--shirt-ink);
+}
+.shirt__back-title { font-size: 3.6cqw; font-weight: 700; line-height: 1.2; }
+.shirt__back-sub   { font-size: 2.6cqw; line-height: 1.35; }
