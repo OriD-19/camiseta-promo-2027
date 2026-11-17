@@ -105,7 +105,7 @@ export function createMockBackend(opts: { latencyMs?: number; open?: boolean } =
         return { ok: true, updated: last !== undefined };
       }
       case 'results':
-        if (!payload.key || !payload.key.trim()) return { ok: false, error: 'no_autorizado' };
+        if (!payload.idToken || !payload.idToken.trim()) return { ok: false, error: 'no_autorizado' };
         return { ok: true, ...sampleResults() };
     }
   };

@@ -23,20 +23,17 @@
           <div class="login__head">
             <p class="eyebrow">Panel de representantes</p>
             <h1 class="h1" id="login-title">Resultados de la votación</h1>
-            <p class="muted">Ingresá la clave de representantes para ver los resultados.</p>
+            <p class="muted">Entrá con tu cuenta de Google. Solo las cuentas de la lista de representantes pueden ver los resultados.</p>
           </div>
-          <form class="form" id="login-form" novalidate>
-            <div class="field">
-              <label class="field__label" for="f-key">Clave de representantes</label>
-              <input class="input" id="f-key" name="key" type="password" autocomplete="current-password"
-                autocapitalize="none" autocorrect="off" spellcheck="false" required enterkeyhint="go" />
-              <p class="field__hint" id="mock-hint" hidden>
-                Modo de prueba sin backend: cualquier clave muestra datos de ejemplo.
-              </p>
-            </div>
-            <p class="notice notice--error" id="login-error" role="alert" hidden></p>
-            <button class="btn" id="login-btn" type="submit">Ver resultados</button>
-          </form>
+          <div class="login__actions">
+            <div class="gsi" id="gsi-btn"></div>
+            <button class="btn" id="mock-btn" type="button" hidden>Ver datos de ejemplo</button>
+            <p class="field__hint" id="mock-hint" hidden>
+              Modo de prueba sin backend: se muestran datos de ejemplo sin pedir cuenta.
+            </p>
+          </div>
+          <p class="login__status small muted" id="login-status" role="status" aria-live="polite"></p>
+          <p class="notice notice--error" id="login-error" role="alert" hidden></p>
         </div>
       </section>
 
@@ -55,7 +52,10 @@
         </header>
 
         <div class="toolbar">
-          <p class="toolbar__updated small muted" id="updated" aria-live="polite"></p>
+          <div class="toolbar__info">
+            <p class="small muted" id="account"></p>
+            <p class="small muted" id="updated" aria-live="polite"></p>
+          </div>
           <div class="toolbar__actions">
             <button class="btn btn--ghost" id="refresh" type="button">Actualizar</button>
             <button class="btn btn--ghost" id="csv" type="button">Descargar CSV (anónimo)</button>

@@ -22,18 +22,25 @@ import {
   type Filter,
   type VarKey,
 } from './aggregate';
+import { decodeIdToken, isTokenExpired } from './auth';
 import { $, h, setPressed } from './dom';
+import { gisSignOut, loadGis } from './gis';
 import { renderShirt } from './shirt';
 import { readJSON, remove, writeJSON } from './storage';
 
-const KEY_STORE = 'camiseta-promo-2027:clave'; // sessionStorage: nunca en la URL
+// ID token de Google en sessionStorage (nunca en la URL). Dura una hora y se borra al cerrar la pestaña.
+const TOKEN_STORE = 'camiseta-promo-2027:id-token';
+const CLIENT_ID = (import.meta.env?.VITE_GOOGLE_CLIENT_ID ?? '').trim();
+const MOCK_TOKEN = 'mock';
+
+remove('camiseta-promo-2027:clave', 'session'); // clave compartida de la versión anterior
 
 /* ------------------------------------------------------------------ */
 /* Estado                                                              */
 /* ------------------------------------------------------------------ */
 
 interface State {
-  key: string;
+  token: string;
   data: ResultsData | null;
   clean: Cleaned | null;
   filter: Filter;
@@ -44,7 +51,7 @@ interface State {
 }
 
 const state: State = {
-  key: readJSON<string>(KEY_STORE, 'session') ?? '',
+  token: readJSON<string>(TOKEN_STORE, 'session') ?? '',
   data: null,
   clean: null,
   filter: 'todas',
@@ -56,11 +63,12 @@ const state: State = {
 
 const el = {
   login: $('#login'),
-  loginForm: $<HTMLFormElement>('#login-form'),
-  key: $<HTMLInputElement>('#f-key'),
-  loginError: $('#login-error'),
-  loginBtn: $<HTMLButtonElement>('#login-btn'),
+  gsiBtn: $('#gsi-btn'),
+  mockBtn: $<HTMLButtonElement>('#mock-btn'),
   mockHint: $('#mock-hint'),
+  loginStatus: $('#login-status'),
+  loginError: $('#login-error'),
+  account: $('#account'),
   dash: $('#dash'),
   mockBadge: $('#mock-badge'),
   openChip: $('#open-chip'),
@@ -82,8 +90,16 @@ const el = {
 };
 
 const RESULTS_ERRORS: Record<string, string> = {
-  no_autorizado: 'Clave incorrecta. Revisala e intentá de nuevo.',
+  no_autorizado: 'Tu sesión de Google venció o no es válida. Entrá de nuevo.',
+  no_es_representante:
+    'Esa cuenta de Google no está en la lista de representantes. Entrá con otra cuenta o pedile a otro representante que te agregue.',
+  acceso_sin_configurar: 'El acceso con Google todavía no está configurado en el servidor.',
+  gis: 'No pudimos cargar el acceso con Google. Revisá tu conexión (o desactivá el bloqueador de anuncios) y recargá la página.',
+  sin_client_id: 'Falta configurar el acceso con Google en este sitio (VITE_GOOGLE_CLIENT_ID).',
+  expirada: 'Tu sesión de Google venció (dura una hora). Entrá de nuevo.',
 };
+/** Errores que obligan a volver a entrar: la sesión actual ya no sirve. */
+const AUTH_ERRORS = new Set(['no_autorizado', 'no_es_representante', 'acceso_sin_configurar']);
 const resultsError = (code?: string) =>
   (code && RESULTS_ERRORS[code]) || 'No pudimos cargar los resultados. Revisá tu conexión e intentá de nuevo.';
 
@@ -132,35 +148,91 @@ function setFilter(f: Filter): void {
 /* Carga                                                               */
 /* ------------------------------------------------------------------ */
 
+let gsiReady = false;
+
+async function mountGoogleButton(): Promise<void> {
+  if (gsiReady) return;
+  try {
+    const gsi = await loadGis();
+    gsi.initialize({
+      client_id: CLIENT_ID,
+      callback: ({ credential }) => void load(credential, true),
+      auto_select: true,
+      ux_mode: 'popup',
+      context: 'signin',
+      itp_support: true,
+    });
+    // renderButton acepta 200–400 px; se ajusta al ancho de la tarjeta (celulares de 320 px incluidos).
+    // (Se mide el contenedor: .gsi vacío está oculto y mide 0.)
+    const width = Math.max(200, Math.min(400, Math.floor(el.gsiBtn.parentElement?.clientWidth ?? 0)));
+    el.gsiBtn.replaceChildren();
+    gsi.renderButton(el.gsiBtn, {
+      type: 'standard',
+      theme: 'outline',
+      size: 'large',
+      text: 'signin_with',
+      shape: 'pill',
+      logo_alignment: 'center',
+      width,
+      locale: 'es-419',
+    });
+    gsiReady = true;
+  } catch {
+    showError(resultsError('gis'));
+  }
+}
+
+function showError(msg: string): void {
+  el.loginError.textContent = msg;
+  el.loginError.hidden = !msg;
+}
+
 function showLogin(msg = ''): void {
   el.dash.hidden = true;
   el.login.hidden = false;
-  el.loginError.textContent = msg;
-  el.loginError.hidden = !msg;
+  showError(msg);
   el.mockHint.hidden = !api.isMock;
-  el.key.value = '';
-  el.key.focus();
+  el.mockBtn.hidden = !api.isMock;
+  if (api.isMock) {
+    el.mockBtn.focus();
+  } else if (!CLIENT_ID) {
+    showError(resultsError('sin_client_id'));
+  } else {
+    void mountGoogleButton();
+  }
 }
 
 function setLoading(on: boolean): void {
   state.loading = on;
-  el.loginBtn.disabled = on;
-  el.loginBtn.replaceChildren(...(on ? [h('span', { class: 'spinner', 'aria-hidden': 'true' }), 'Cargando…'] : ['Ver resultados']));
+  el.mockBtn.disabled = on;
+  el.loginStatus.replaceChildren(...(on ? [h('span', { class: 'spinner', 'aria-hidden': 'true' }), 'Verificando tu cuenta…'] : []));
   el.refresh.disabled = on;
   el.refresh.replaceChildren(...(on ? [h('span', { class: 'spinner', 'aria-hidden': 'true' }), 'Actualizando…'] : ['Actualizar']));
 }
 
-async function load(key: string, fromLogin: boolean): Promise<void> {
+function signOut(msg = ''): void {
+  remove(TOKEN_STORE, 'session');
+  state.token = '';
+  state.data = null;
+  state.clean = null;
+  showLogin(msg);
+}
+
+async function load(token: string, fromLogin: boolean): Promise<void> {
   if (state.loading) return;
+  if (!api.isMock && isTokenExpired(token)) {
+    signOut(resultsError('expirada'));
+    return;
+  }
+  if (fromLogin) showError('');
   setLoading(true);
-  const r = await api.results(key);
+  const r = await api.results(token);
   setLoading(false);
 
   if (!r.ok) {
-    if (r.error === 'no_autorizado') {
-      remove(KEY_STORE, 'session');
-      state.key = '';
-      showLogin(resultsError(r.error));
+    if (AUTH_ERRORS.has(r.error)) {
+      if (r.error === 'no_es_representante') gisSignOut(); // que no vuelva a entrar solo con esa cuenta
+      signOut(resultsError(r.error));
       return;
     }
     if (fromLogin || !state.data) {
@@ -172,8 +244,8 @@ async function load(key: string, fromLogin: boolean): Promise<void> {
     return;
   }
 
-  state.key = key;
-  writeJSON(KEY_STORE, key, 'session');
+  state.token = token;
+  writeJSON(TOKEN_STORE, token, 'session');
   state.data = r;
   state.clean = cleanVotes(r.votes);
   state.loadedAt = new Date();
@@ -185,27 +257,13 @@ async function load(key: string, fromLogin: boolean): Promise<void> {
   if (wasHidden) window.scrollTo({ top: 0 });
 }
 
-el.loginForm.addEventListener('submit', (ev) => {
-  ev.preventDefault();
-  const key = el.key.value.trim();
-  if (!key) {
-    el.loginError.textContent = 'Escribí la clave.';
-    el.loginError.hidden = false;
-    el.key.focus();
-    return;
-  }
-  el.loginError.hidden = true;
-  void load(key, true);
-});
+el.mockBtn.addEventListener('click', () => void load(MOCK_TOKEN, true));
 
-el.refresh.addEventListener('click', () => void load(state.key, false));
+el.refresh.addEventListener('click', () => void load(state.token, false));
 
 el.logout.addEventListener('click', () => {
-  remove(KEY_STORE, 'session');
-  state.key = '';
-  state.data = null;
-  state.clean = null;
-  showLogin();
+  gisSignOut();
+  signOut();
 });
 
 el.csv.addEventListener('click', () => {
@@ -258,6 +316,8 @@ function render(): void {
   for (const { id, b } of lensBtns) setPressed(b, lensId === id);
 
   el.mockBadge.hidden = !api.isMock;
+  const email = decodeIdToken(state.token)?.email;
+  el.account.textContent = api.isMock ? 'Modo de prueba, sin cuenta' : email ? `Sesión: ${email}` : '';
   el.openChip.textContent = data.open ? 'Votación abierta' : 'Votación cerrada';
   el.openChip.className = `chip ${data.open ? 'chip--open' : 'chip--closed'}`;
   el.updated.textContent = state.loadedAt
@@ -436,5 +496,9 @@ function renderComments(): void {
 /* Arranque                                                            */
 /* ------------------------------------------------------------------ */
 
-if (state.key) void load(state.key, true);
-else showLogin();
+if (state.token && (api.isMock || !isTokenExpired(state.token))) void load(state.token, true);
+else {
+  if (state.token) remove(TOKEN_STORE, 'session');
+  state.token = '';
+  showLogin();
+}

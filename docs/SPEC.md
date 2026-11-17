@@ -125,7 +125,11 @@ Layout, textos y orden como en `reference/prototipo/Main.dc.html`.
 
 Referencia: `reference/prototipo/Resultados.dc.html`.
 
-- **Acceso:** pantalla inicial que pide la clave de representantes. Se manda en el body (`action: 'results'`), nunca en la URL, y se guarda en `sessionStorage`. Con `no_autorizado`, se muestra error y se vuelve a pedir.
+- **Acceso con Google:** pantalla inicial con el botón "Acceder con Google" (Google Identity Services, `VITE_GOOGLE_CLIENT_ID`).
+  - El navegador recibe un ID token firmado por Google y lo manda en el body (`action: 'results'`), nunca en la URL. Se guarda en `sessionStorage` y dura una hora.
+  - El servidor verifica el token con Google (`aud` = `GOOGLE_CLIENT_ID`, emisor, vencimiento y `email_verified`) y solo responde si el correo está en la hoja `Representantes`.
+  - Con `no_autorizado`, `no_es_representante` o `acceso_sin_configurar`, se borra la sesión, se muestra el error y se vuelve al acceso. Si el token ya venció al tocar "Actualizar", se pide entrar de nuevo.
+  - Sin backend (mock), el acceso es un botón "Ver datos de ejemplo".
 - **Datos:** `{ votes, inscritos, comentarios }` del backend. Toda la agregación se hace en el cliente, en `src/aggregate.ts` (funciones puras con tests).
 - **Filtro global:** "Toda la promo" / LEN / LCJ / IDN / ISND. Recalcula todo.
 - **Tarjetas resumen:**
@@ -166,7 +170,7 @@ fetch(import.meta.env.VITE_APPS_SCRIPT_URL, {
 |---|---|---|
 | `status` | `{action}` | `{ok, open, version}` |
 | `vote` | `{action, data:{nombre, correo, carrera, fondo, logo, tipografia, comentario, website}}` | `{ok, updated}` |
-| `results` | `{action, key}` | `{ok, version, open, votes:[{carrera,fondo,logo,tipografia,version}], inscritos:{LEN,LCJ,IDN,ISND}, comentarios:[{carrera,texto}]}` |
+| `results` | `{action, idToken}` | `{ok, version, open, votes:[{carrera,fondo,logo,tipografia,version}], inscritos:{LEN,LCJ,IDN,ISND}, comentarios:[{carrera,texto}]}` |
 
 ### 7.3 Errores → mensajes en la UI
 
@@ -180,6 +184,14 @@ fetch(import.meta.env.VITE_APPS_SCRIPT_URL, {
 | `valor_invalido_*` | Algo salió mal con tu selección. Recargá la página. |
 | `espera_unos_segundos` | Ya recibimos tu voto. Esperá unos segundos antes de cambiarlo. |
 | `servidor_ocupado` / `error_interno` / red | No pudimos enviar tu voto. Intentá de nuevo. |
+
+Dashboard (`results`):
+
+| `error` | Mensaje |
+|---|---|
+| `no_autorizado` | Tu sesión de Google venció o no es válida. Entrá de nuevo. |
+| `no_es_representante` | Esa cuenta de Google no está en la lista de representantes. Entrá con otra cuenta o pedile a otro representante que te agregue. |
+| `acceso_sin_configurar` | El acceso con Google todavía no está configurado en el servidor. |
 
 ## 8. Estilo visual
 

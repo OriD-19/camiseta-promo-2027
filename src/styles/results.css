@@ -23,6 +23,17 @@
 .login__head { display: flex; flex-direction: column; gap: 8px; }
 .login .h1 { font-size: clamp(26px, 7vw, 32px); }
 .login .btn { width: 100%; }
+.login__actions { display: flex; flex-direction: column; gap: 10px; }
+/* El botón de Google es un iframe de 40 px de alto: el contenedor da el área táctil de 44 px. */
+.gsi {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gsi:empty { display: none; }
+.login__status { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 0; }
+.login__status:empty { display: none; }
 
 /* ---------- Encabezado ---------- */
 .dash { display: flex; flex-direction: column; gap: 20px; }
@@ -68,6 +79,9 @@
   justify-content: space-between;
   gap: 10px 16px;
 }
+.toolbar__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.toolbar__info p { overflow-wrap: anywhere; }
+.toolbar__info p:empty { display: none; }
 .toolbar__actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .toolbar .btn--ghost { color: var(--c-text); border-color: var(--c-border-strong); background: var(--c-surface); }
 @media (max-width: 599px) {

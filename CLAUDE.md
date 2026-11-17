@@ -8,12 +8,14 @@ Sitio estático para que la promoción 2027 de la ESEN (unas 125 personas, carre
 
 ```
 index.html                 votación
-resultados.html            dashboard (protegido con clave)
+resultados.html            dashboard (acceso con Google, solo representantes)
 src/
   config.ts                ÚNICA fuente de verdad de opciones, colores y posición del logo
   colors.ts                luminancia, contraste, mezcla y shirtColors() (puro, con tests)
   shirt.ts                 renderShirt(): SVG + capa de logo
   api.ts                   cliente del Apps Script (status, vote, results)
+  auth.ts                  lectura del ID token de Google (puro, con tests)
+  gis.ts                   carga de Google Identity Services
   aggregate.ts             conteos, top 3 y desglose por carrera (puro, con tests)
   vote.ts                  lógica de la página de votación
   results.ts               lógica del dashboard
@@ -37,7 +39,7 @@ reference/prototipo/       prototipo de diseño (.dc.html); solo es referencia, 
 - **Sin frameworks de UI ni Tailwind.** TypeScript plano + DOM + CSS con variables. Dependencias mínimas: vite, typescript, vitest.
 - **Opciones solo en `src/config.ts`.** Si cambian ids, actualizar también `ALLOWED` en `apps-script/Code.gs` y subir `OPTIONS_VERSION` en ambos.
 - **Llamadas al backend:** `Content-Type: text/plain;charset=utf-8` con body JSON. Nunca `application/json`, porque dispara un preflight CORS que Apps Script no soporta.
-- **El dashboard nunca muestra datos personales.** La clave de admin va en el body y se guarda en `sessionStorage`, nunca en la URL.
+- **El dashboard nunca muestra datos personales.** Se entra con Google: el ID token va en el body y se guarda en `sessionStorage`, nunca en la URL. El servidor lo verifica y revisa la hoja `Representantes`.
 - **Textos de la UI** en español salvadoreño con voseo (Elegí, Enviá, Usá), copiados del prototipo cuando existan.
 - **Accesibilidad:**
   - Botones reales con `aria-pressed` para las selecciones.
@@ -55,5 +57,6 @@ reference/prototipo/       prototipo de diseño (.dc.html); solo es referencia, 
 - `.env` (no se commitea):
   - `VITE_APPS_SCRIPT_URL=https://script.google.com/macros/s/.../exec`
   - `VITE_BASE=/` (con dominio propio) o `/<nombre-del-repo>/` (GitHub Pages sin dominio).
-- En GitHub Actions, las dos se leen de *Repository variables* (`vars.VITE_APPS_SCRIPT_URL`, `vars.VITE_BASE`). Con dominio propio se define además `vars.CUSTOM_DOMAIN`: el workflow genera `dist/CNAME` y fuerza `base = /`. Sin `VITE_BASE` ni dominio, la base es `/<repo>/`.
+  - `VITE_GOOGLE_CLIENT_ID=…apps.googleusercontent.com` (acceso de representantes; igual a `GOOGLE_CLIENT_ID` en Apps Script).
+- En GitHub Actions, se leen de *Repository variables* (`vars.VITE_APPS_SCRIPT_URL`, `vars.VITE_BASE`, `vars.VITE_GOOGLE_CLIENT_ID`). Con dominio propio se define además `vars.CUSTOM_DOMAIN`: el workflow genera `dist/CNAME` y fuerza `base = /`. Sin `VITE_BASE` ni dominio, la base es `/<repo>/`.
 - Para desarrollar sin backend, `api.ts` puede usar un mock si `VITE_APPS_SCRIPT_URL` está vacío. El mock genera datos de ejemplo deterministas, como en el prototipo.

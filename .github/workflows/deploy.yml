@@ -4,6 +4,7 @@ name: Deploy a GitHub Pages
 #   VITE_APPS_SCRIPT_URL  URL /exec del backend. Si falta, el sitio usa el mock con datos de ejemplo.
 #   CUSTOM_DOMAIN         opcional, p. ej. camiseta.midominio.com. Si existe, se genera dist/CNAME y la base es "/".
 #   VITE_BASE             opcional. Si no hay dominio propio y falta, se usa "/<nombre-del-repo>/".
+#   VITE_GOOGLE_CLIENT_ID Client ID de OAuth para que los representantes entren al dashboard con Google.
 
 on:
   push:
@@ -56,6 +57,7 @@ jobs:
         env:
           VITE_APPS_SCRIPT_URL: ${{ vars.VITE_APPS_SCRIPT_URL }}
           VITE_BASE: ${{ steps.base.outputs.value }}
+          VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
 
       - name: CNAME (solo con dominio propio)
         if: ${{ vars.CUSTOM_DOMAIN != '' }}

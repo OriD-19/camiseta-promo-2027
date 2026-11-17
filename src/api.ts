@@ -31,7 +31,7 @@ export type ApiResult<T> = ({ ok: true } & T) | Fail;
 export type Payload =
   | { action: 'status' }
   | { action: 'vote'; data: VoteData }
-  | { action: 'results'; key: string };
+  | { action: 'results'; idToken: string };
 
 export type Transport = (payload: Payload) => Promise<unknown>;
 
@@ -100,7 +100,8 @@ export interface Api {
   readonly isMock: boolean;
   status(): Promise<ApiResult<{ open: boolean; version: string }>>;
   vote(data: VoteData): Promise<ApiResult<{ updated: boolean }>>;
-  results(key: string): Promise<ApiResult<ResultsData>>;
+  /** `idToken`: ID token de "Acceder con Google". */
+  results(idToken: string): Promise<ApiResult<ResultsData>>;
 }
 
 export function createApi(transport: Transport, isMock = false): Api {
@@ -114,7 +115,7 @@ export function createApi(transport: Transport, isMock = false): Api {
       if (!r.ok && r.error === 'espera_unos_segundos' && r.retried) return { ok: true, updated: false };
       return r;
     },
-    results: (key) => call(transport, { action: 'results', key }),
+    results: (idToken) => call(transport, { action: 'results', idToken }),
   };
 }
 

@@ -109,10 +109,10 @@ describe('mock', () => {
     expect(await closed.vote(vote)).toEqual({ ok: false, error: 'votacion_cerrada' });
   });
 
-  it('results pide clave y devuelve datos deterministas', async () => {
+  it('results pide un token y devuelve datos deterministas', async () => {
     const api = createApi(createMockBackend({ latencyMs: 0 }), true);
     expect(await api.results('')).toEqual({ ok: false, error: 'no_autorizado' });
-    const r = await api.results('cualquiera');
+    const r = await api.results('token-de-prueba');
     expect(r.ok).toBe(true);
     expect(sampleVotes()).toEqual(sampleVotes());
   });

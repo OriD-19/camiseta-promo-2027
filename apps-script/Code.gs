@@ -4,11 +4,12 @@
  * Endpoints (todos por POST, body JSON enviado como text/plain para evitar preflight CORS):
  *   { "action": "status" }                         -> { ok, open, version }
  *   { "action": "vote", "data": { ... } }          -> { ok, updated }   | { ok:false, error }
- *   { "action": "results", "key": "ADMIN_KEY" }    -> { ok, votes:[...], inscritos:{...}, comentarios:[...] }
+ *   { "action": "results", "idToken": "<JWT>" }    -> { ok, votes:[...], inscritos:{...}, comentarios:[...] }
+ *     idToken es el ID token de "Acceder con Google". Solo pasan los correos de la hoja Representantes.
  * GET (sin parámetros) devuelve el mismo resultado que "status" (útil para probar en el navegador).
  *
  * Script Properties (Configuración del proyecto > Propiedades del script):
- *   ADMIN_KEY        clave para leer resultados desde el dashboard (obligatoria)
+ *   GOOGLE_CLIENT_ID Client ID de OAuth (tipo "Aplicación web") que usa el dashboard (obligatoria)
  *   VOTING_OPEN      "true" | "false"
  *   PADRON_REQUIRED  "true" para aceptar solo correos que estén en la hoja Padron
  *   INSCRITOS_JSON   opcional, p. ej. {"LEN":38,"LCJ":27,"IDN":30,"ISND":30} si no usan Padron
@@ -16,11 +17,12 @@
 
 const OPTIONS_VERSION = 'v1';
 
-const SHEETS = { VOTOS: 'Votos', LOG: 'Log', PADRON: 'Padron' };
+const SHEETS = { VOTOS: 'Votos', LOG: 'Log', PADRON: 'Padron', REPS: 'Representantes' };
 
 const VOTOS_HEADERS = ['timestamp', 'nombre', 'correo', 'carrera', 'fondo', 'logo', 'tipografia', 'comentario', 'version_opciones', 'envios'];
 const LOG_HEADERS = ['timestamp', 'correo', 'carrera', 'fondo', 'logo', 'tipografia', 'version_opciones'];
 const PADRON_HEADERS = ['correo', 'nombre', 'carrera'];
+const REPS_HEADERS = ['correo', 'nombre'];
 
 // Debe coincidir con los ids de src/config.ts en el frontend.
 const ALLOWED = {
@@ -56,7 +58,7 @@ function doPost(e) {
       case 'vote':
         return json_(handleVote_(body.data || {}));
       case 'results':
-        return json_(handleResults_(body.key));
+        return json_(handleResults_(body.idToken));
       default:
         return json_({ ok: false, error: 'accion_invalida' });
     }
@@ -140,9 +142,13 @@ function handleVote_(d) {
 /* Resultados (solo representantes)                                    */
 /* ------------------------------------------------------------------ */
 
-function handleResults_(key) {
-  const adminKey = prop_('ADMIN_KEY');
-  if (!adminKey || !key || String(key) !== adminKey) return { ok: false, error: 'no_autorizado' };
+function handleResults_(idToken) {
+  const clientId = prop_('GOOGLE_CLIENT_ID');
+  if (!clientId) return { ok: false, error: 'acceso_sin_configurar' };
+
+  const email = verifyGoogleIdToken_(idToken, clientId);
+  if (!email) return { ok: false, error: 'no_autorizado' };
+  if (!isRepresentante_(email)) return { ok: false, error: 'no_es_representante' };
 
   const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEETS.VOTOS);
   const last = sh.getLastRow();
@@ -165,6 +171,45 @@ function handleResults_(key) {
   return { ok: true, version: OPTIONS_VERSION, open: isOpen_(), votes, inscritos: inscritos_(), comentarios };
 }
 
+/**
+ * Verifica el ID token con Google (firma, vencimiento y emisor) y revisa que sea para
+ * nuestro Client ID. Devuelve el correo verificado o null.
+ * Va por POST porque UrlFetchApp limita la URL a 2 KB y un ID token puede acercarse a eso.
+ */
+function verifyGoogleIdToken_(idToken, clientId) {
+  const token = String(idToken || '');
+  if (!/^[\w-]+\.[\w-]+\.[\w-]+$/.test(token) || token.length > 4096) return null;
+
+  const res = UrlFetchApp.fetch('https://oauth2.googleapis.com/tokeninfo', {
+    method: 'post',
+    payload: { id_token: token },
+    muteHttpExceptions: true,
+  });
+  if (res.getResponseCode() !== 200) return null;
+
+  let info;
+  try {
+    info = JSON.parse(res.getContentText());
+  } catch (err) {
+    return null;
+  }
+  const issuers = ['accounts.google.com', 'https://accounts.google.com'];
+  if (info.aud !== clientId) return null; // token emitido para otra app: no sirve aquí
+  if (issuers.indexOf(info.iss) === -1) return null;
+  if (String(info.email_verified) !== 'true') return null;
+  if (!(Number(info.exp) * 1000 > Date.now())) return null;
+  return String(info.email || '').trim().toLowerCase() || null;
+}
+
+function isRepresentante_(email) {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEETS.REPS);
+  if (!sh || sh.getLastRow() < 2) return false;
+  return sh
+    .getRange(2, 1, sh.getLastRow() - 1, 1)
+    .getValues()
+    .some((r) => String(r[0]).trim().toLowerCase() === email);
+}
+
 /* ------------------------------------------------------------------ */
 /* Setup: ejecutar UNA vez desde el editor                             */
 /* ------------------------------------------------------------------ */
@@ -174,13 +219,19 @@ function setup() {
   ensureSheet_(ss, SHEETS.VOTOS, VOTOS_HEADERS);
   ensureSheet_(ss, SHEETS.LOG, LOG_HEADERS);
   ensureSheet_(ss, SHEETS.PADRON, PADRON_HEADERS);
+  ensureSheet_(ss, SHEETS.REPS, REPS_HEADERS);
 
   const props = PropertiesService.getScriptProperties();
   if (!props.getProperty('VOTING_OPEN')) props.setProperty('VOTING_OPEN', 'false');
   if (!props.getProperty('PADRON_REQUIRED')) props.setProperty('PADRON_REQUIRED', 'false');
-  if (!props.getProperty('ADMIN_KEY')) props.setProperty('ADMIN_KEY', Utilities.getUuid());
 
-  console.log('Listo. ADMIN_KEY = ' + props.getProperty('ADMIN_KEY'));
+  // Ya no se usa: el dashboard entra con Google. Se borra para que no quede una clave vieja.
+  props.deleteProperty('ADMIN_KEY');
+
+  if (!props.getProperty('GOOGLE_CLIENT_ID')) {
+    console.log('Falta GOOGLE_CLIENT_ID en las propiedades del script (ver docs/APPS_SCRIPT.md, paso 4).');
+  }
+  console.log('Listo. Agregá los correos de los representantes en la hoja Representantes.');
 }
 
 function abrirVotacion() { PropertiesService.getScriptProperties().setProperty('VOTING_OPEN', 'true'); }

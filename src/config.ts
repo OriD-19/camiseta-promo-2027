@@ -37,7 +37,7 @@ export const FRASE = '[FRASE CANDIDATA]'; // pendiente de definir
 
 // Posición del logo en el pecho, en % del ancho/alto de la camiseta.
 // Se ajusta a mano; también se expone como variables CSS (--logo-left, --logo-top, --logo-width).
-export const LOGO_POSITION = { left: 56, top: 21, width: 24 };
+export const LOGO_POSITION = { left: 52, top: 25, width: 24 };
 
 export const EMAIL_DOMAIN = 'esen.edu.sv';
 
