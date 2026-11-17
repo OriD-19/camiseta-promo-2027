@@ -8,7 +8,7 @@ const vote = {
   carrera: 'ISND',
   fondo: 'negro',
   logo: 'siglas',
-  tipografia: 'bebas',
+  tipografia: 'archivo',
   comentario: '',
   website: '',
 };

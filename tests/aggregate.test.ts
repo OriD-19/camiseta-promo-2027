@@ -16,7 +16,7 @@ import {
   type Vote,
 } from '../src/aggregate';
 
-const V = (carrera: string, fondo: string, logo: string, tipografia: string, version = 'v1'): RawVote => ({
+const V = (carrera: string, fondo: string, logo: string, tipografia: string, version = 'v2'): RawVote => ({
   carrera,
   fondo,
   logo,
@@ -26,19 +26,19 @@ const V = (carrera: string, fondo: string, logo: string, tipografia: string, ver
 
 // Datos fijos: 10 votos válidos + 2 de versión vieja + 1 inválido.
 const RAW: RawVote[] = [
-  V('ISND', 'negro', 'siglas', 'bebas'),
-  V('ISND', 'negro', 'siglas', 'bebas'),
-  V('ISND', 'carrera', 'insignia', 'mono'),
-  V('LEN', 'negro', 'siglas', 'bebas'),
+  V('ISND', 'negro', 'siglas', 'archivo'),
+  V('ISND', 'negro', 'siglas', 'archivo'),
+  V('ISND', 'carrera', 'insignia', 'momo'),
+  V('LEN', 'negro', 'siglas', 'archivo'),
   V('LEN', 'blanco', 'linea', 'montserrat'),
   V('LEN', 'blanco', 'linea', 'montserrat'),
-  V('LCJ', 'carrera', 'siglas', 'bebas'),
+  V('LCJ', 'carrera', 'siglas', 'archivo'),
   V('LCJ', 'carrera', 'frase', 'playfair'),
   V('IDN', 'negro', 'linea', 'montserrat'),
-  V('IDN', 'carrera', 'siglas', 'graduate'),
-  V('LEN', 'gris', 'siglas', 'bebas', 'v0'),
-  V('IDN', 'negro', 'escudo', 'mono', 'v0'),
-  V('ISND', 'negro', 'otro', 'bebas', 'v1'),
+  V('IDN', 'carrera', 'siglas', 'alfa'),
+  V('LEN', 'gris', 'siglas', 'archivo', 'v0'),
+  V('IDN', 'negro', 'escudo', 'momo', 'v0'),
+  V('ISND', 'negro', 'otro', 'archivo', 'v2'),
 ];
 const INSCRITOS = { LEN: 38, LCJ: 27, IDN: 30, ISND: 30 };
 const { votes, oldVersion, invalid } = cleanVotes(RAW);
@@ -48,7 +48,7 @@ describe('cleanVotes', () => {
     expect(votes).toHaveLength(10);
     expect(oldVersion).toBe(2);
     expect(invalid).toBe(1);
-    expect(votes.every((v) => v.version === 'v1')).toBe(true);
+    expect(votes.every((v) => v.version === 'v2')).toBe(true);
   });
 
   it('acepta otra versión explícita', () => {
@@ -81,7 +81,7 @@ describe('tally y ganadores', () => {
     expect([w.id, w.count, w.lead, w.runnerUp?.id]).toEqual(['siglas', 5, 2, 'linea']);
     expect(gapText(w)).toBe('+2 sobre Siglas + línea');
     const t = winner(tally(votes, 'tipografia'))!;
-    expect([t.id, t.label, t.count]).toEqual(['bebas', 'Bebas Neue', 4]);
+    expect([t.id, t.label, t.count]).toEqual(['archivo', 'Archivo Black', 4]);
     expect(gapText(t)).toBe('+1 sobre Montserrat');
   });
 
@@ -94,7 +94,7 @@ describe('combinaciones', () => {
   it('top 3 por votos con desempate por config', () => {
     const top = topCombos(votes);
     expect(top.map((c) => [comboLabel(c), c.count])).toEqual([
-      ['Negro · Siglas + 2027 · Bebas Neue', 3],
+      ['Negro · Siglas + 2027 · Archivo Black', 3],
       ['Blanco · Siglas + línea · Montserrat', 2],
       // Todas las demás tienen 1 voto: gana la que va primero en config (negro < carrera).
       ['Negro · Siglas + línea · Montserrat', 1],
@@ -107,16 +107,16 @@ describe('combinaciones', () => {
 
   it('desempate completo: fondo, luego logo, luego tipografía', () => {
     const vs = cleanVotes([
-      V('LEN', 'carrera', 'siglas', 'mono'),
-      V('LEN', 'carrera', 'siglas', 'bebas'),
-      V('LEN', 'carrera', 'linea', 'bebas'),
-      V('LEN', 'blanco', 'insignia', 'mono'),
+      V('LEN', 'carrera', 'siglas', 'momo'),
+      V('LEN', 'carrera', 'siglas', 'archivo'),
+      V('LEN', 'carrera', 'linea', 'archivo'),
+      V('LEN', 'blanco', 'insignia', 'momo'),
     ]).votes;
     expect(combos(vs).map((c) => `${c.fondo}/${c.logo}/${c.tipografia}`)).toEqual([
-      'blanco/insignia/mono',
-      'carrera/siglas/bebas',
-      'carrera/siglas/mono',
-      'carrera/linea/bebas',
+      'blanco/insignia/momo',
+      'carrera/siglas/archivo',
+      'carrera/siglas/momo',
+      'carrera/linea/archivo',
     ]);
   });
 });
@@ -161,7 +161,7 @@ describe('byCareer', () => {
 describe('toCSV', () => {
   it('exporta solo columnas anónimas', () => {
     const csv = toCSV(votes.slice(0, 2));
-    expect(csv).toBe('carrera,fondo,logo,tipografia,version\r\nISND,negro,siglas,bebas,v1\r\nISND,negro,siglas,bebas,v1\r\n');
+    expect(csv).toBe('carrera,fondo,logo,tipografia,version\r\nISND,negro,siglas,archivo,v2\r\nISND,negro,siglas,archivo,v2\r\n');
     expect(csv).not.toMatch(/nombre|correo/);
   });
 

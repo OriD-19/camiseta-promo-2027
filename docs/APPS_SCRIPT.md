@@ -93,7 +93,7 @@ El padrón hace tres cosas:
 2. **Ejecutar como:** Yo.
 3. **Quién tiene acceso:** **Cualquier usuario** (Anyone). No elijas "Cualquier usuario con cuenta de Google": eso redirige a un login y el sitio no puede leer la respuesta.
 4. **Implementar**. Copiá la URL que termina en `/exec`.
-5. Abrí esa URL en el navegador: tiene que mostrar `{"ok":true,"open":false,"version":"v1"}`.
+5. Abrí esa URL en el navegador: tiene que mostrar `{"ok":true,"open":false,"version":"v2"}`.
 
 ## 9. Probar
 
@@ -105,7 +105,7 @@ curl -sL -H 'Content-Type: text/plain;charset=utf-8' -d '{"action":"status"}' "$
 
 # Voto (necesita VOTING_OPEN=true y, si PADRON_REQUIRED=true, que el correo esté en Padron)
 curl -sL -H 'Content-Type: text/plain;charset=utf-8' \
-  -d '{"action":"vote","data":{"nombre":"Prueba","correo":"prueba@esen.edu.sv","carrera":"ISND","fondo":"negro","logo":"siglas","tipografia":"bebas","comentario":""}}' \
+  -d '{"action":"vote","data":{"nombre":"Prueba","correo":"prueba@esen.edu.sv","carrera":"ISND","fondo":"negro","logo":"siglas","tipografia":"montserrat","comentario":""}}' \
   "$URL"
 
 # Resultados sin sesión: tiene que responder {"ok":false,"error":"no_autorizado"}

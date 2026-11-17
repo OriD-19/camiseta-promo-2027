@@ -15,7 +15,7 @@
  *   INSCRITOS_JSON   opcional, p. ej. {"LEN":38,"LCJ":27,"IDN":30,"ISND":30} si no usan Padron
  */
 
-const OPTIONS_VERSION = 'v1';
+const OPTIONS_VERSION = 'v2';
 
 const SHEETS = { VOTOS: 'Votos', LOG: 'Log', PADRON: 'Padron', REPS: 'Representantes' };
 
@@ -29,7 +29,7 @@ const ALLOWED = {
   carrera: ['LEN', 'LCJ', 'IDN', 'ISND'],
   fondo: ['blanco', 'negro', 'beige', 'carrera'],
   logo: ['siglas', 'linea', 'frase', 'insignia'],
-  tipografia: ['bebas', 'montserrat', 'graduate', 'playfair', 'mono'],
+  tipografia: ['montserrat', 'playfair', 'archivo', 'alfa', 'momo'],
 };
 
 const EMAIL_RE = /^[a-z0-9._%+-]+@esen\.edu\.sv$/;

@@ -2,7 +2,7 @@
  * ÚNICA fuente de verdad de opciones, colores y posición del logo.
  * Si cambian los ids, actualizar ALLOWED en apps-script/Code.gs y subir OPTIONS_VERSION en ambos.
  */
-export const OPTIONS_VERSION = 'v1';
+export const OPTIONS_VERSION = 'v2';
 
 export const CAREERS = [
   { id: 'LEN',  nombre: 'Licenciatura en Economía y Negocios',          color: '#EE803C', fondo: '#4C1F00' },
@@ -26,11 +26,11 @@ export const LOGOS = [
 ] as const;
 
 export const FONTS = [
-  { id: 'bebas',      nombre: 'Bebas Neue',       desc: 'Condensada',        family: "'Bebas Neue', sans-serif",     weight: 400, tracking: '0.04em' },
-  { id: 'montserrat', nombre: 'Montserrat',       desc: 'Geométrica',        family: "'Montserrat', sans-serif",     weight: 800, tracking: '0em' },
-  { id: 'graduate',   nombre: 'Graduate',         desc: 'Varsity / college', family: "'Graduate', serif",            weight: 400, tracking: '0.02em' },
-  { id: 'playfair',   nombre: 'Playfair Display', desc: 'Serif clásica',     family: "'Playfair Display', serif",    weight: 800, tracking: '0em' },
-  { id: 'mono',       nombre: 'Space Mono',       desc: 'Monoespaciada',     family: "'Space Mono', monospace",      weight: 700, tracking: '-0.02em' },
+  { id: 'montserrat', nombre: 'Montserrat',         desc: 'Geométrica',      family: "'Montserrat', sans-serif",         weight: 800, tracking: '0em' },
+  { id: 'playfair',   nombre: 'Playfair Display',   desc: 'Serif clásica',   family: "'Playfair Display', serif",        weight: 800, tracking: '0em' },
+  { id: 'archivo',    nombre: 'Archivo Black',      desc: 'Sans gruesa',     family: "'Archivo Black', sans-serif",      weight: 400, tracking: '0em' },
+  { id: 'alfa',       nombre: 'Alfa Slab One',      desc: 'Slab / varsity',  family: "'Alfa Slab One', serif",           weight: 400, tracking: '0.01em' },
+  { id: 'momo',       nombre: 'Momo Trust Display', desc: 'Display moderna', family: "'Momo Trust Display', sans-serif", weight: 400, tracking: '0em' },
 ] as const;
 
 export const FRASE = '[FRASE CANDIDATA]'; // pendiente de definir

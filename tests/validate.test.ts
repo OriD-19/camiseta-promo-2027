@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { buildVoteData, clean, errorMessage, isInstitutionalEmail, normalizeEmail, validateVote } from '../src/validate';
 
 const okForm = { nombre: 'Ana Pérez', correo: 'ana.perez@esen.edu.sv', carrera: 'ISND', comentario: '' };
-const okSel = { fondo: 'negro', logo: 'siglas', tipografia: 'bebas' };
+const okSel = { fondo: 'negro', logo: 'siglas', tipografia: 'archivo' };
 
 describe('correo institucional', () => {
   it('acepta solo @esen.edu.sv, sin importar mayúsculas ni espacios', () => {
@@ -63,7 +63,7 @@ describe('buildVoteData', () => {
       carrera: 'ISND',
       fondo: 'negro',
       logo: 'siglas',
-      tipografia: 'bebas',
+      tipografia: 'archivo',
       comentario: '',
       website: '',
     });

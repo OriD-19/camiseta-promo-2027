@@ -65,7 +65,7 @@ function loadState(): State {
     lens: isCareerId(s.lens) ? s.lens : 'ISND',
     fondo: isFondoId(s.fondo) ? s.fondo : 'blanco',
     logo: isLogoId(s.logo) ? s.logo : 'siglas',
-    fuente: isFontId(s.fuente) ? s.fuente : 'bebas',
+    fuente: isFontId(s.fuente) ? s.fuente : FONTS[0].id,
     side: s.side === 'back' ? 'back' : 'front',
     view: s.view === 'grid' ? 'grid' : 'single',
     form: {

@@ -38,7 +38,7 @@ describe('shirtColors', () => {
     expect(shirtColors(c, 'blanco').fill).toBe('#FFFFFF');
     expect(shirtColors(c, 'negro').fill).toBe('#151515');
     expect(shirtColors(c, 'beige').fill).toBe('#E6DAC3');
-    expect(shirtColors(c, 'carrera').fill).toBe('#164644');
+    expect(shirtColors(c, 'carrera').fill).toBe(c.fondo);
   });
 
   it('blanco y beige son claros: tinta oscura, stroke suave y acento original', () => {

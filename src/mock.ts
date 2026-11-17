@@ -49,7 +49,7 @@ export function sampleVotes(seed = 2027): VoteRow[] {
   }
   // Unos pocos votos de una versión anterior, para ver el aviso en el dashboard.
   out.push(
-    { carrera: 'LEN', fondo: 'gris', logo: 'siglas', tipografia: 'bebas', version: 'v0' },
+    { carrera: 'LEN', fondo: 'negro', logo: 'siglas', tipografia: 'bebas', version: 'v1' },
     { carrera: 'IDN', fondo: 'negro', logo: 'escudo', tipografia: 'mono', version: 'v0' },
   );
   return out;
@@ -60,7 +60,7 @@ const SAMPLE_COMMENTS = [
   { carrera: 'LEN', texto: 'Propuesta de frase: «Hechos para trascender».' },
   { carrera: 'LCJ', texto: 'Que el fondo negro no sea muy grueso, hace calor.' },
   { carrera: 'IDN', texto: 'Frase: «Lo que empezamos juntos».' },
-  { carrera: 'ISND', texto: 'Bebas Neue se lee mejor de lejos.' },
+  { carrera: 'ISND', texto: 'Archivo Black se lee mejor de lejos.' },
 ];
 
 export function sampleResults(): ResultsData {

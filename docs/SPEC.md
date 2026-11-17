@@ -12,7 +12,7 @@ La referencia visual y de comportamiento es el prototipo de `reference/prototipo
   - `index.html`: votación.
   - `resultados.html`: dashboard.
 - **Estilos:** CSS plano en `src/styles/`, con variables CSS para los tokens. No usar Tailwind.
-- **Fuentes:** Google Fonts. UI en Inter y Space Grotesk; para el logo, Bebas Neue, Montserrat 800, Graduate, Playfair Display 800 y Space Mono 700.
+- **Fuentes:** Google Fonts. UI en Inter y Space Grotesk; para el logo, Montserrat 800, Playfair Display 800, Archivo Black, Alfa Slab One y Momo Trust Display (máximo 5 opciones).
 - **Backend:** Google Apps Script + Google Sheets (`apps-script/`, guía en `docs/APPS_SCRIPT.md`). El frontend nunca habla directo con Sheets.
 - **Hosting:** GitHub Pages, desplegado con GitHub Actions (`.github/workflows/deploy.yml`) en cada push a `main`.
   - `base` en `vite.config.ts` se lee de `VITE_BASE`: `/` con dominio propio, `/<repo>/` sin él.
@@ -28,7 +28,7 @@ La referencia visual y de comportamiento es el prototipo de `reference/prototipo
 Es la única fuente de verdad de las opciones. Los ids deben coincidir con `ALLOWED` en `apps-script/Code.gs`.
 
 ```ts
-export const OPTIONS_VERSION = 'v1';
+export const OPTIONS_VERSION = 'v2';
 
 export const CAREERS = [
   { id: 'LEN',  nombre: 'Licenciatura en Economía y Negocios',          color: '#EE803C', fondo: '#593924' },
@@ -52,11 +52,11 @@ export const LOGOS = [
 ] as const;
 
 export const FONTS = [
-  { id: 'bebas',      nombre: 'Bebas Neue',       desc: 'Condensada',        family: "'Bebas Neue', sans-serif",     weight: 400, tracking: '0.04em' },
-  { id: 'montserrat', nombre: 'Montserrat',       desc: 'Geométrica',        family: "'Montserrat', sans-serif",     weight: 800, tracking: '0em' },
-  { id: 'graduate',   nombre: 'Graduate',         desc: 'Varsity / college', family: "'Graduate', serif",            weight: 400, tracking: '0.02em' },
-  { id: 'playfair',   nombre: 'Playfair Display', desc: 'Serif clásica',     family: "'Playfair Display', serif",    weight: 800, tracking: '0em' },
-  { id: 'mono',       nombre: 'Space Mono',       desc: 'Monoespaciada',     family: "'Space Mono', monospace",      weight: 700, tracking: '-0.02em' },
+  { id: 'montserrat', nombre: 'Montserrat',         desc: 'Geométrica',      family: "'Montserrat', sans-serif",         weight: 800, tracking: '0em' },
+  { id: 'playfair',   nombre: 'Playfair Display',   desc: 'Serif clásica',   family: "'Playfair Display', serif",        weight: 800, tracking: '0em' },
+  { id: 'archivo',    nombre: 'Archivo Black',      desc: 'Sans gruesa',     family: "'Archivo Black', sans-serif",      weight: 400, tracking: '0em' },
+  { id: 'alfa',       nombre: 'Alfa Slab One',      desc: 'Slab / varsity',  family: "'Alfa Slab One', serif",           weight: 400, tracking: '0.01em' },
+  { id: 'momo',       nombre: 'Momo Trust Display', desc: 'Display moderna', family: "'Momo Trust Display', sans-serif", weight: 400, tracking: '0em' },
 ] as const;
 
 export const FRASE = '[FRASE CANDIDATA]'; // pendiente de definir
