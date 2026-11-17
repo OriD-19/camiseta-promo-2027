@@ -5,10 +5,10 @@
 export const OPTIONS_VERSION = 'v1';
 
 export const CAREERS = [
-  { id: 'LEN',  nombre: 'Licenciatura en Economía y Negocios',          color: '#EE803C', fondo: '#593924' },
-  { id: 'LCJ',  nombre: 'Licenciatura en Ciencias Jurídicas',            color: '#D61A28', fondo: '#521C1F' },
-  { id: 'IDN',  nombre: 'Ingeniería de Negocios',                        color: '#2BAC6E', fondo: '#224532' },
-  { id: 'ISND', nombre: 'Ingeniería de Software y Negocios Digitales',   color: '#00AFAC', fondo: '#164644' },
+  { id: 'LEN',  nombre: 'Licenciatura en Economía y Negocios',          color: '#EE803C', fondo: '#4C1F00' },
+  { id: 'LCJ',  nombre: 'Licenciatura en Ciencias Jurídicas',            color: '#D61A28', fondo: '#5C0008' },
+  { id: 'IDN',  nombre: 'Ingeniería de Negocios',                        color: '#2BAC6E', fondo: '#01381F' },
+  { id: 'ISND', nombre: 'Ingeniería de Software y Negocios Digitales',   color: '#00AFAC', fondo: '#003635' },
 ] as const;
 
 export const FONDOS = [
